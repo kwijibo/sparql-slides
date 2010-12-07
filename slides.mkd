@@ -1,0 +1,300 @@
+!SLIDE
+
+#A Day of SPARQL 
+
+##  Keith Alexander
+
+!SLIDE
+
+**S**PARQL  **P**rotocol  **A**nd  **R**DF  **Q**uery  **L**anguage
+
+!SLIDE
+##Protocol:
+
+###Client Request
+
+
+
+*`GET`* `http://example.info/sparql?query={urlencoded query}`
+
+(or *`POST`* for very long queries)
+
+
+Use content-negotiation to indicate your preferred format for results
+
+
+!SLIDE
+
+##Protocol:
+### Server Response
+
+
+
+`HTTP 200 OK` (if the query was valid)
+
+results can be serialised in various formats: XML, JSON, Turtle, HTML
+
+`HTTP 400 Bad Request` (if query wasn't valid)
+
+!SLIDE
+
+#Query Language
+
+@@@ sparql
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+SELECT ?name ?email
+WHERE {
+  ?person 
+    a foaf:Person ;
+    foaf:name ?name ;
+    foaf:mbox ?email .
+} 
+ORDER BY ?name
+LIMIT 10
+OFFSET 0
+@@@
+
+!SLIDE
+#Architecture
+![diagram of data, triplestore, SPARQL Processor, SPARQL endpoint, applications/clients ](img/sparql-arch.png)
+
+
+!SLIDE
+#Endpoint
+
+## A SPARQL Endpoint for NASA data
+<form method="POST" action="http://api.talis.com/stores/space/services/sparql">
+    <textarea rows="10" cols="40">
+PREFIX space: &lt;http://purl.org/net/schemas/space/&gt; 
+SELECT ?craft 
+WHERE {
+    ?craft a space:Spacecraft .
+}        
+    </textarea>
+    <br/>
+    <input type="submit" value="Query"/>
+</form>
+
+
+!SLIDE
+
+#####Triple Store Conceptually
+![picture of data graph](img/triplestore-data-graph.png)
+
+!SLIDE
+
+# 4 Types of Query
+
+* ASK (true or false)
+* SELECT (table)
+* DESCRIBE (resource descriptions)
+* CONSTRUCT (triples)
+
+!SLIDE
+
+# ASK: Uses
+
+* Probing a triple store
+* Authentication (does a user with this email and password hash exist ?)
+
+!SLIDE
+
+##ASK: Example
+@@@ sparql
+
+PREFIX space: &lt;http://purl.org/net/schemas/space/&gt; 
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+ASK 
+WHERE {
+    &lt;http://nasa.dataincubator.org/spacecraft/1957-001B&gt;
+        foaf:name "Sputnik 1"
+         .
+}        
+@@@
+
+!SLIDE
+
+![diagram of pattern matching against something named sputnik](img/match-name-sputnik.png)
+
+
+
+!SLIDE
+
+##ASK: Example
+@@@ sparql
+
+PREFIX space: &lt;http://purl.org/net/schemas/space/&gt; 
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+ASK 
+WHERE {
+    ?something
+        foaf:name "Sputnik 1"
+         .
+}        
+@@@
+
+!SLIDE
+
+![diagram of pattern matching against something named sputnik](img/match-name-sputnik.png)
+
+
+!SLIDE
+
+##ASK: is there anything with an rdfs:label ?
+
+@@@ sparql
+
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+ASK 
+WHERE {
+  ?something rdfs:label ?label .
+}
+
+@@@
+
+!SLIDE
+
+![triplestore diagram matching anything with an rdfs:label pattern](img/ask-rdfs-label.png)
+
+!SLIDE
+
+### Result
+@@@ xml
+&lt;sparql xmlns=&quot;http://www.w3.org/2005/sparql-results#&quot;&gt; 
+        &lt;head/&gt;
+        &lt;boolean&gt;true&lt;/boolean&gt;
+&lt;/sparql&gt;
+@@@
+
+
+
+!SLIDE
+
+##ASK: Example
+@@@ sparql
+
+PREFIX space: &lt;http://purl.org/net/schemas/space/&gt; 
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+ASK 
+WHERE {
+    ?something a space:Spacecraft ;
+        foaf:name "Sputnik 1"
+         .
+}        
+@@@
+
+
+
+!SLIDE
+##ASK: Exercise
+
+
+
+[http://api.talis.com/stores/space/services/sparql](http://api.talis.com/stores/space/services/sparql)  
+  
+  
+
+Use `ASK` to find if there are any things with an `rdf:type` property `space:Spacecraft`, and a `foaf:depiction` (with any value).
+
+
+
+
+!SLIDE
+
+#SELECT: Uses
+
+`SELECT` returns a table, good for:
+
+*  Getting back simple values in a tabular structure.
+*  Using semantic web data with XML tools (don't use XML tools with RDF/XML!)
+*  Ordered Results (order is significant in XML, but not in an RDF document).
+
+
+
+!SLIDE
+##SELECT: Example
+
+@@@ sparql
+PREFIX space: &lt;http://purl.org/net/schemas/space/&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+
+SELECT ?subject ?label 
+WHERE {
+  ?subject 
+    a space:Discipline ;
+    rdfs:label ?label 
+    .
+
+}
+@@@
+
+
+
+!SLIDE
+
+##SELECT: Exercise
+
+Use `SELECT` to  get the  `foaf:name` and `space:mass` of all `space:Spacecraft`.
+
+!SLIDE
+
+##SELECT: Connected Things
+
+@@@ sparql
+PREFIX space: &lt;http://purl.org/net/schemas/space/&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+
+SELECT ?spacecraftName ?disciplineLabel 
+WHERE {
+  ?spacecraft 
+      a space:Spacecraft ;
+      foaf:name ?spacecraftName ;
+      space:discipline ?discipline .
+       
+  ?discipline 
+    a space:Discipline ;
+    rdfs:label ?disciplineLabel .
+}
+@@@
+
+
+
+!SLIDE
+
+###SELECT: Connected Things Exercise
+
+Write a `SELECT` query that returns the values of:
+1. The `foaf:name` of something that is `a space:Spacecraft`, and *is* `space:spacecraft` *of* a `space:Launch` (ie: `?launch space:spacecraft ?craft .`)
+2. The launch date (`space:launched`)  of the `space:Launch`
+3. The `rdfs:label` of the `space:Launchsite` that is the `space:launchsite` of the Launch. 
+
+
+
+!SLIDE
+
+###SELECT: Only Unique Rows
+@@@ sparql
+PREFIX space: &lt;http://purl.org/net/schemas/space/&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+
+SELECT DISTINCT ?spacecraftName ?launchdate ?launchsiteName 
+WHERE {
+  ?spacecraft 
+      a space:Spacecraft ;
+      foaf:name ?spacecraftName ;
+      space:discipline ?discipline .       
+  ?launch 
+      a space:Launch ;
+      space:spacecraft ?spacecraft ;
+      space:launched ?launchdate ;
+      space:launchsite ?launchsite .
+  ?launchsite
+      rdfs:label ?launchsiteName .
+}
+
+@@@
