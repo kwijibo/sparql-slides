@@ -190,11 +190,15 @@ WHERE {
 
 
 
-[http://api.talis.com/stores/space/services/sparql](http://api.talis.com/stores/space/services/sparql)  
+[http://bit.ly/nasa-sparql](http://api.talis.com/stores/space/services/sparql)
+
+
   
   
 
-Use `ASK` to find if there are any things with an `rdf:type` property `space:Spacecraft`, and a `foaf:depiction` (with any value).
+Use `ASK` to find if there are any things with:
+* an `rdf:type` property `space:Spacecraft`, and 
+* a `foaf:depiction` (with any value).
 
 
 
@@ -235,7 +239,131 @@ WHERE {
 
 ##SELECT: Exercise
 
-Use `SELECT` to  get the  `foaf:name` and `space:mass` of all `space:Spacecraft`.
+Use `SELECT` to  get the  URI and `foaf:name` of all `foaf:Person` s.
+
+Don't forget to add the **foaf** prefix:
+
+@@@ sparql
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+@@@
+
+
+!SLIDE
+
+## Too many results!
+## LIMIT
+@@@ sparql
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+SELECT ?uri ?name 
+WHERE 
+{
+  ?uri a foaf:Person ;
+  foaf:name ?name .
+}		
+LIMIT 10
+@@@
+
+!SLIDE
+
+![table from SELECT query](img/select-people.png)
+
+
+!SLIDE
+## Paging with `OFFSET`
+
+* `LIMIT` is page size
+* `OFFSET` is starting point: page size * (page number - 1)
+
+!SLIDE
+
+# `ORDER BY`
+@@@ sparql
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+SELECT ?uri ?name 
+WHERE 
+{
+  ?uri a foaf:Person ;
+  foaf:name ?name .
+}
+ORDER BY ?name		
+LIMIT 10
+@@@
+
+
+!SLIDE
+
+## `ORDER BY` 
+### Sort Order 
+
+* `?name` *ascending alphabetic order*
+* `ASC(` `?name` `)` *ascending alphabetic order*
+* `DESC(` `?name` `)` *descending alphabetic order*
+* `ASC(` `xsd:decimal(` `?number` `)` `)` *ascending numeric order*
+* `?name ?place ?mass`  *inner sorts*
+
+!SLIDE
+
+## `ORDER BY` Exercise:
+
+1. Look at an example spacecraft [http://nasa.dataincubator.org/spacecraft/1988-111A](http://nasa.dataincubator.org/spacecraft/1988-111A)
+2. Find the URI for the property that describes **mass**.
+3. `SELECT` the ten `space:Spacecraft` with the most mass, in descending numeric order.
+
+!SLIDE
+
+## Duplicate Results
+
+@@@ sparql
+PREFIX space: &lt;http://purl.org/net/schemas/space/&gt;
+SELECT   ?country 
+WHERE {
+  ?launchsite 
+      a space:LaunchSite ;
+      space:country ?country . 
+}
+@@@
+
+!SLIDE
+
+## Duplicate Results
+
+![table with duplicate results](img/duplicate-results.png)
+
+
+!SLIDE
+
+# `DISTINCT`
+@@@ sparql
+PREFIX space: &lt;http://purl.org/net/schemas/space/&gt;
+SELECT  DISTINCT ?country 
+WHERE {
+  ?launchsite 
+      a space:LaunchSite ;
+      space:country ?country . 
+}
+@@@
+
+
+!SLIDE
+
+##Duplicate results
+
+## `REDUCED`
+
+@@@ sparql
+PREFIX space: &lt;http://purl.org/net/schemas/space/&gt;
+SELECT  REDUCED ?country 
+WHERE {
+  ?launchsite 
+      a space:LaunchSite ;
+      space:country ?country . 
+}
+@@@
+
+Like `DISTINCT`, but less strict
+
+<cite>Do your best to eliminate duplicates, but don't worry if there are some, just do it as quick as you can</cite>
+
 
 !SLIDE
 
@@ -243,20 +371,22 @@ Use `SELECT` to  get the  `foaf:name` and `space:mass` of all `space:Spacecraft`
 
 @@@ sparql
 PREFIX space: &lt;http://purl.org/net/schemas/space/&gt;
-PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
 PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
 PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
 
-SELECT ?spacecraftName ?disciplineLabel 
+SELECT DISTINCT ?spacecraftName  ?launchdate
 WHERE {
   ?spacecraft 
       a space:Spacecraft ;
       foaf:name ?spacecraftName ;
-      space:discipline ?discipline .
-       
+      space:discipline ?discipline . 
   ?discipline 
     a space:Discipline ;
-    rdfs:label ?disciplineLabel .
+    rdfs:label "Astronomy" .
+  ?launch 
+    a space:Launch ; 
+    space:launched ?launchdate ;
+    space:spacecraft ?spacecraft .
 }
 @@@
 
@@ -267,21 +397,19 @@ WHERE {
 ###SELECT: Connected Things Exercise
 
 Write a `SELECT` query that returns the values of:
-1. The `foaf:name` of something that is `a space:Spacecraft`, and *is* `space:spacecraft` *of* a `space:Launch` (ie: `?launch space:spacecraft ?craft .`)
+1. The `foaf:name` of something that is `a space:Spacecraft`, and **is  `space:spacecraft` of**  a `space:Launch` (ie: `?launch space:spacecraft ?craft .`)
 2. The launch date (`space:launched`)  of the `space:Launch`
 3. The `rdfs:label` of the `space:Launchsite` that is the `space:launchsite` of the Launch. 
-
+4. The `space:country` is <q>Japan</q>.
 
 
 !SLIDE
 
-###SELECT: Only Unique Rows
+###Connected Things: answer
 @@@ sparql
 PREFIX space: &lt;http://purl.org/net/schemas/space/&gt;
-PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
 PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
 PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
-
 SELECT DISTINCT ?spacecraftName ?launchdate ?launchsiteName 
 WHERE {
   ?spacecraft 
@@ -296,5 +424,406 @@ WHERE {
   ?launchsite
       rdfs:label ?launchsiteName .
 }
+ORDER BY ?launchsiteName
+LIMIT 10
+@@@
+
+!SLIDE
+
+# Data is not uniform!
+
+!SLIDE
+### Get images for Spacecraft
+@@@ sparql
+PREFIX space: &lt;http://purl.org/net/schemas/space/&gt;
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+
+SELECT ?uri ?name ?image 
+WHERE 
+{
+  ?uri a space:Spacecraft ;
+      foaf:name ?name ;
+      foaf:depiction ?image .
+}
+@@@
+
+!SLIDE
+
+## Data is not uniform
+
+Look at: 
+[http://nasa.dataincubator.org/spacecraft/1988-111A](http://nasa.dataincubator.org/spacecraft/1988-111A)
+
+
+!SLIDE
+# `OPTIONAL`
+
+@@@ sparql
+PREFIX space: &lt;http://purl.org/net/schemas/space/&gt;
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+
+SELECT ?uri ?name ?image 
+WHERE 
+{
+  ?uri a space:Spacecraft ;
+      foaf:name ?name .
+      
+      OPTIONAL{
+            ?uri foaf:depiction ?image . 
+           }
+}
+@@@
+
+
+!SLIDE
+
+## Data is not uniform
+### Different patterns doing the same thing
+
+@@@ sparql
+?s a space:Spacecraft ;
+    foaf:name ?label .
+@@@
+    
+    
+@@@ sparql
+?s a space:Discipline ;
+    rdfs:label ?label .
+@@@
+
+!SLIDE
+# `UNION`
+### Binds different patterns to the same variable names
+
+@@@ sparql
+SELECT ?s  ?label 
+WHERE
+{
+
+    {
+        ?s a space:Spacecraft ;
+        foaf:name ?label .
+    } 
+    UNION
+    { 
+        ?s a space:Discipline ;
+        rdfs:label ?label . 
+    }
+}
+@@@
+
+!SLIDE 
+
+# Evaluation values with `FILTER`
+
+@@@ sparql
+PREFIX space: &lt;http://purl.org/net/schemas/space/&gt;
+SELECT ?s 
+WHERE 
+{
+    ?s a space:Spacecraft ;
+        space:mass ?mass .
+    FILTER(?mass &lt; 100.0)
+}
 
 @@@
+
+!SLIDE
+
+### Evaluating values with FILTER
+
+`?mass` is only a plain literal in the triple store
+
+`100.0` is a Decimal
+
+We can cast ?mass to an xsd datatype to compare it to a decimal
+
+@@@ sparql
+FILTER( xsd:decimal(?mass) &lt; 100.0)
+@@@
+
+!SLIDE
+###  'Between' Dates with `FILTER`
+
+Names of spacecraft launched
+
+@@@ sparql
+PREFIX space: &lt;http://purl.org/net/schemas/space/&gt;
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+
+SELECT ?name WHERE {
+  ?launch space:launched ?date ;
+          space:spacecraft ?spacecraft .
+  ?spacecraft foaf:name ?name .
+FILTER (
+  ?date &gt;= &quot;1969-01-01&quot;^^xsd:date &amp;&amp; 
+  ?date &lt;= &quot;1969-12-31&quot;^^xsd:date
+  )
+}
+@@@
+(Here the dates have `xsd:date` datatypes in the triple store)
+
+!SLIDE
+### `FILTER`: String matching with `REGEX`
+@@@ sparql
+PREFIX space: &lt;http://purl.org/net/schemas/space/&gt;
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+
+SELECT ?s ?name 
+WHERE {
+    ?s a space:Spacecraft ;
+        foaf:name ?name .
+  FILTER(REGEX(?name, "Apollo", "i"))
+}
+@@@
+
+!SLIDE
+#### Advanced REGEX trick
+ 
+ Store **regular expressions** as *data*, and use them in your queries.
+ 
+@@@ sparql
+PREFIX void: &lt;http://rdfs/org/ns/void#&gt;
+SELECT ?dataset
+WHERE 
+{
+    ?dataset a void:Dataset ;
+        void:uriRegexPattern ?regex .
+    FILTER(REGEX("http://nasa.dataincubator.org/spacecraft/1988-111A", ?regex))    
+}
+@@@
+
+!SLIDE
+##### If you described your regexes as RDF you could:
+
+@@@ sparql
+
+SELECT ?uri ?invalidPostcode
+WHERE
+{
+    ?uri ex:postcode ?invalidPostcode .
+    regex:UK_Postcode regex:pattern ?postcodeRegex .
+    FILTER(!REGEX(?invalidPostcode, ?postcodeRegex)) 
+}
+@@@
+
+!SLIDE
+##More `FILTER`
+
+* tests:
+  * isURI(?o)
+  * isLiteral(?o)
+  * isBlank(?o)
+  * bound(?o)
+* boolean logic:
+  * AND `&&`
+  * OR `||`
+  * NOT `!`
+  * Equal `=`
+  * Not Equal `!=`
+
+!SLIDE
+## Patterns *Without* a sub pattern
+
+The `OPTIONAL FILTER !bound` technique:
+@@@ sparql
+PREFIX space: &lt;http://purl.org/net/schemas/space/&gt;
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+
+SELECT ?s
+WHERE
+{
+    ?s a space:Spacecraft .
+    OPTIONAL {
+        ?s foaf:depiction ?img .
+    }
+    FILTER( !bound(?img) )
+}
+@@@
+
+
+!SLIDE
+
+##`FILTER` exercise:
+
+Find URIs that are linked to, but not described.
+* What is a pattern for  `?o` where  `?o` is linked to by something?
+* How do you test that `?o` is a URI, rather than a Literal or Blank Node?
+* What is a pattern for `?o` having a description? (ie, being the *subject* of triples)?
+* How do you exclude that pattern?
+
+
+!SLIDE
+
+# `DESCRIBE`
+
+Returns RDF about any matching resources
+
+## Uses:
+* Getting back stuff you didn't know existed
+
+!SLIDE
+## DESCRIBE: known URIs
+
+@@@ sparql
+DESCRIBE 
+&lt;http://nasa.dataincubator.org/spacecraft/1957-001B&gt;
+&lt;http://nasa.dataincubator.org/spacecraft/1988-111A&gt;
+
+@@@
+
+Can DESCRIBE one or more known URIs
+
+!SLIDE
+
+## DESCRIBE: pattern matches
+
+@@@ sparql
+PREFIX space: &lt;http://purl.org/net/schemas/space/&gt;
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+
+DESCRIBE ?spacecraft ?launch
+WHERE {
+  ?spacecraft 
+      a space:Spacecraft ;
+      space:discipline ?discipline . 
+  ?discipline 
+    a space:Discipline ;
+    rdfs:label "Astronomy" .
+  ?launch 
+    a space:Launch ; 
+    space:launched ?launchdate ;
+    space:spacecraft ?spacecraft .
+}
+@@@
+
+
+!SLIDE
+
+# `CONSTRUCT`
+@@@ sparql
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+CONSTRUCT 
+{
+    ?s rdfs:label ?label ; 
+        a ?type . 
+}
+WHERE
+{ 
+    ?s rdfs:label ?label ;
+        a ?type . 
+}
+@@@
+ Returns specific triples
+ 
+!SLIDE
+##`CONSTRUCT`ing new Triples
+
+You can remodel the data matched by the query into new triples:
+
+@@@ sparql
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+CONSTRUCT 
+{
+    ?s rdfs:label ?label ; 
+        a ?type . 
+}
+WHERE
+{ 
+    ?s foaf:name ?label ;
+        a ?type . 
+}
+
+@@@
+
+!SLIDE
+## `CONSTRUCT`: Uses
+
+* Migrating the data model  (or re`CONSTRUCT`ing it on the fly) 
+* Generating new triples
+
+
+!SLIDE
+### `CONSTRUCT`: Obscure advanced trick
+
+You don't need to take any values from the `WHERE` clause.
+
+@@@ sparql
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+CONSTRUCT
+{
+    <http://example.com/Buzz_Aldrin> a foaf:Person ;
+        foaf:name "Buzz Aldrin" .
+        
+} WHERE {}
+@@@
+
+
+!SLIDE
+# Aggregates
+
+* `SUM`
+* `MAX`
+* `MIN`
+* `AVG`
+* `COUNT`
+
+!SLIDE
+
+## `MAX`
+
+@@@ sparql
+PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+PREFIX space: &lt;http://purl.org/net/schemas/space/&gt;
+
+SELECT (MAX(xsd:decimal(?mass)) AS ?max)
+WHERE 
+{
+  ?s a space:Spacecraft ;
+      space:mass ?mass .
+}
+@@@
+
+
+!SLIDE
+
+### Aggregates: Exercise
+
+1. Find the lowest value of `space:mass` of a `space:Spacecraft`
+
+
+
+
+!SLIDE
+
+# Performance
+## Things that make queries slow:
+
+* variable-heavy graph patterns (`?s ?p ?o`)
+* variables that aren't connected in the graph pattern (`?s ?p ?o . ?x ?y ?z` ) - Cross product!
+* No `LIMIT` - lots of results to return
+* `ORDER BY` - processor has to sort through all the results before applying `LIMIT`
+* `DISTINCT` - processor has to sort through all results and eliminate duplicates
+* `FILTER` - processor has to evaluate values
+* `OPTIONAL` - an OPTIONAL pattern doesn't make the query any more specific
+
+## Tips for Optimising queries
+
+* Be specific (use URIs and Literals instead of variables where you can)
+* Put the most restrictive patterns first.
+* Use `REDUCED` instead of `DISTINCT` if you can.
+* Use `ASK` if you don't need values returned
+* Use `LIMIT` and `OFFSET` to page through large results
+
+!SLIDE
+## Syntactic Sugar and other Weirdness: 
+
+* `WHERE` isn't required (except with `CONSTRUCT`)
+* `SELECT *` returns a table with columns for each variable used (`DESCRIBE *` also works)
+* **bnodes** are treated as unnamed variables: ` [] a foaf:Person` is the same as `?s a foaf:Person`.
+* Variables can be notated as `$foo` as well as `?foo`
+
+

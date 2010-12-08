@@ -167,3 +167,9 @@ li {
 ol, ul {
 	margin-left: 2em;
 }
+p {
+	padding: 0.5em;
+}
+li {
+	padding-left: 1em;
+}
