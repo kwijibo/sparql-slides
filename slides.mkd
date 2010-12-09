@@ -16,7 +16,7 @@
 
 !SLIDE
 
-**S**PARQL  **P**rotocol  **A**nd  **R**DF  **Q**uery  **L**anguage
+#**S**PARQL  **P**rotocol  **A**nd  **R**DF  **Q**uery  **L**anguage
 
 !SLIDE
 ##Protocol:
@@ -253,6 +253,8 @@ WHERE {
 
 ##SELECT: Exercise
 
+
+
 Use `SELECT` to  get the  URI and `foaf:name` of all `foaf:Person` s.
 
 Don't forget to add the **foaf** prefix:
@@ -321,7 +323,7 @@ LIMIT 10
 
 1. Look at an example spacecraft [http://nasa.dataincubator.org/spacecraft/1988-111A](http://nasa.dataincubator.org/spacecraft/1988-111A)
 2. Find the URI for the property that describes **mass**.
-3. `SELECT` the ten `space:Spacecraft` with the most mass, in descending numeric order.
+3. `SELECT` the ten `space:Spacecraft` with the largest mass, in descending numeric order.
 
 !SLIDE
 
@@ -821,13 +823,14 @@ CONSTRUCT
 * `LIMIT` limits number of *solutions* to the graph pattern, not the number of *resources* or  *triples*.
 * Can't do "10 Missions and all the pilots who flew on them" - need sub selects (coming in SPARQL 1.1), or 
 
+!SLIDE
 # SPARQL Application Pattern 
 
 The way to deal with the 'gotchas' is:
 
 1. Use `SELECT` to generate your ordered list of root resource URIs (eg: 10 missions)
-2. Generate a `CONSTRUCT` from the URIs you got from the SELECT, retrieving the triples you need for each of the resources
-3. 
+2. Generate a `CONSTRUCT` to query for a description of the URIs you got from the SELECT, retrieving the triples you need for each of the resources. No `ORDER BY` or `LIMIT` should be used in this query.
+3. Use the response from the `SELECT` to render the descriptions from the `CONSTRUCT` response in the correct order.
 
 
 !SLIDE

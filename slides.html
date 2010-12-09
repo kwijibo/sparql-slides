@@ -4753,7 +4753,7 @@ jQuery.extend( jQuery.easing,
   $(window).bind('resize', function() { adjustSlides(); });
   $(document).bind('keydown', move);
   $(document).bind('hash.changed', adjustSlides);
-  $(document).bind('click', clickMove);
+  
   $(document).ready(function() {
     setIndex(getIndex() || 0);
     $(this).trigger('hash.changed');
@@ -4784,6 +4784,8 @@ jQuery.extend( jQuery.easing,
           <div class="">
             <div id="slide-1" class="content">
               <h1>Useful Materials</h1><ul>
+<li>These slides: http://kwijibo.talis.com/training/SPARQL :  <a href="https://github.com/kwijibo/sparql-slides">source on github</a>
+</li>
 <li><a href="http://api.talis.com/stores/space/services/sparql">NASA data endpoint</a></li>
 <li><a href="http://myadmin.kwijibo.talis.com/space/services/sparql">NASA data endpoint that returns HTML</a></li>
 <li><a href="http://myadmin.kwijibo.talis.com/training-exercises/services/sparql">training-exercises endpoint</a></li>
@@ -4795,7 +4797,8 @@ jQuery.extend( jQuery.easing,
         
           <div class="">
             <div id="slide-2" class="content">
-              <p><strong>S</strong>PARQL  <strong>P</strong>rotocol  <strong>A</strong>nd  <strong>R</strong>DF  <strong>Q</strong>uery  <strong>L</strong>anguage</p>
+              <h1>
+<strong>S</strong>PARQL  <strong>P</strong>rotocol  <strong>A</strong>nd  <strong>R</strong>DF  <strong>Q</strong>uery  <strong>L</strong>anguage</h1>
             </div>
           </div>
         
@@ -5075,7 +5078,7 @@ WHERE {
 </li>
 <li>Find the URI for the property that describes <strong>mass</strong>.</li>
 <li>
-<code>SELECT</code> the ten <code>space:Spacecraft</code> with the most mass, in descending numeric order.</li>
+<code>SELECT</code> the ten <code>space:Spacecraft</code> with the largest mass, in descending numeric order.</li>
 </ol>
             </div>
           </div>
@@ -5569,16 +5572,21 @@ WHERE {
 <code>LIMIT</code> limits number of <em>solutions</em> to the graph pattern, not the number of <em>resources</em> or  <em>triples</em>.</li>
 <li>Can't do "10 Missions and all the pilots who flew on them" - need sub selects (coming in SPARQL 1.1), or </li>
 </ul>
-<h1>SPARQL Application Pattern</h1><p>The way to deal with the 'gotchas' is:</p><ol>
-<li>Use <code>SELECT</code> to generate your ordered list of root resource URIs (eg: 10 missions)</li>
-<li>Generate a <code>CONSTRUCT</code> from the URIs you got from the SELECT, retrieving the triples you need for each of the resources</li>
-3. 
-</ol>
             </div>
           </div>
         
           <div class="">
             <div id="slide-63" class="content">
+              <h1>SPARQL Application Pattern</h1><p>The way to deal with the 'gotchas' is:</p><ol>
+<li>Use <code>SELECT</code> to generate your ordered list of root resource URIs (eg: 10 missions)</li>
+<li>Generate a <code>CONSTRUCT</code> to query for a description of the URIs you got from the SELECT, retrieving the triples you need for each of the resources. No <code>ORDER BY</code> or <code>LIMIT</code> should be used in this query.</li>
+<li>Use the response from the <code>SELECT</code> to render the descriptions from the <code>CONSTRUCT</code> response in the correct order.</li>
+</ol>
+            </div>
+          </div>
+        
+          <div class="">
+            <div id="slide-64" class="content">
               <h1>Performance</h1><h2>Things that make queries slow:</h2><ul>
 <li>variable-heavy graph patterns (<code>?s ?p ?o</code>)</li>
 <li>variables that aren't connected in the graph pattern (<code>?s ?p ?o . ?x ?y ?z</code> ) - Cross product!</li>
@@ -5604,7 +5612,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-64" class="content">
+            <div id="slide-65" class="content">
               <h2>Syntactic Sugar and other Weirdness:</h2><ul>
 <li>
 <code>WHERE</code> isn't required (except with <code>CONSTRUCT</code>)</li>
@@ -5619,7 +5627,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-65" class="content">
+            <div id="slide-66" class="content">
               <h1>SPARQL 1.1 Aggregates</h1><p><em>SPARQL 1.1</em></p><ul>
 <li><code>MAX</code></li>
 <li><code>COUNT</code></li>
@@ -5631,7 +5639,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-66" class="content">
+            <div id="slide-67" class="content">
               <h2><code>MAX</code></h2><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">xsd:</span><span class="nn"> &lt;http://www.w3.org/2001/XMLSchema#&gt;</span>
 <span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt;</span>
 
@@ -5645,7 +5653,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-67" class="content">
+            <div id="slide-68" class="content">
               <h2><code>COUNT</code></h2><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">xsd:</span><span class="nn"> &lt;http://www.w3.org/2001/XMLSchema#&gt;</span>
 <span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt;</span>
 
@@ -5666,7 +5674,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-68" class="content">
+            <div id="slide-69" class="content">
               <h2>
 <code>COUNT</code> with <code>HAVING()</code>
 </h2><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">xsd:</span><span class="nn"> &lt;http://www.w3.org/2001/XMLSchema#&gt;</span>
@@ -5690,7 +5698,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-69" class="content">
+            <div id="slide-70" class="content">
               <h3>Aggregates: Exercise</h3><ol>
 <li>Find the lowest value of <code>space:mass</code> of a <code>space:Spacecraft</code>
 </li>
@@ -5701,7 +5709,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-70" class="content">
+            <div id="slide-71" class="content">
               <h1>SPARQL for Analysing your Dataset: Exercise</h1><ol>
 <li>Write a query that returns the number of triples in the dataset</li>
 <li>Write a query that returns the number of <code>rdf:type</code> triples</li>
@@ -5712,7 +5720,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-71" class="content">
+            <div id="slide-72" class="content">
               <h1>SPARQL for testing your Data for mistakes</h1><p>eg:</p><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">owl:</span><span class="nn"> &lt;http://www.w3.org/2002/07/owl#&gt;</span>
 <span class="err">ASK </span><span class="k">WHERE</span>{<span class="nv"></span>
 <span class="nv"> ?s</span><span class="o"> owl:sameAs </span><span class="nv">?o </span>.
@@ -5723,7 +5731,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-72" class="content">
+            <div id="slide-73" class="content">
               <h2>SPARQL testing your data: exercise</h2><ul>
 <li>Go to <a href="http://myadmin.kwijibo.talis.com/training-exercises/services/sparql">training-exercises SPARQL endpoint</a>
 </li>
@@ -5736,7 +5744,7 @@ WHERE {
         
           <div class=" 
 ">
-            <div id="slide-73" class="content">
+            <div id="slide-74" class="content">
               <h1>SPARQL for generating schema</h1><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">void:</span><span class="nn"> &lt;http://rdfs.org/ns/void#&gt;</span>
 <span class="k">PREFIX </span><span class="nv">rdf:</span><span class="nn"> &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;</span>
 <span class="k">PREFIX </span><span class="nv">rdfs:</span><span class="nn"> &lt;http://www.w3.org/2000/01/rdf-schema#&gt;</span>
@@ -5760,7 +5768,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-74" class="content">
+            <div id="slide-75" class="content">
               <h2>SPARQL for generating schema: Exercise</h2><p>Expand the query on the previous slide to include:</p><ol>
 <li>A description of the <strong>space</strong> ontology - label, comment, type</li>
 <li>An <code>rdfs:domain</code> for the property</li>
@@ -5770,7 +5778,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-75" class="content">
+            <div id="slide-76" class="content">
               <h1>SPARQL for improving your data: Exercise</h1><ol>
 <li>Get a unique list of values for the <code>space:country</code> of LaunchSites</li>
 <li>Pick one, and find a URI for it (try http://sindice.com)</li>
@@ -5781,7 +5789,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-76" class="content">
+            <div id="slide-77" class="content">
               <h1>More Info</h1><ul>
 <li>#swig on irc.freenode.net</li>
 <li>http://sparql.org/</li>
@@ -5792,7 +5800,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-77" class="content">
+            <div id="slide-78" class="content">
               <h1>Thanks</h1><p><a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons Licence" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png"></a><br><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">A Day of SPARQL</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://keithalexander.co.uk/" property="cc:attributionName" rel="cc:attributionURL">Keith Alexander</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.<br>Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="http://kwijibo.talis.com/training/SPARQL" rel="dct:source">http://kwijibo.talis.com/training/SPARQL</a>.</p>
             </div>
           </div>
