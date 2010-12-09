@@ -5,11 +5,23 @@
 ##  Keith Alexander
 
 !SLIDE
+#Useful Materials
+
+* These slides: http://kwijibo.talis.com/training/SPARQL :  [source on github](https://github.com/kwijibo/sparql-slides)
+* [NASA data endpoint](http://api.talis.com/stores/space/services/sparql)
+* [NASA data endpoint that returns HTML](http://myadmin.kwijibo.talis.com/space/services/sparql)
+* [training-exercises endpoint](http://myadmin.kwijibo.talis.com/training-exercises/services/sparql)
+* [prefix.cc](http://prefix.cc)
+* [bookmarklet for adding missing prefixes to query](http://kwijibo.talis.com/bookmarklets.html#addPrefix2Sparql)
+
+!SLIDE
 
 **S**PARQL  **P**rotocol  **A**nd  **R**DF  **Q**uery  **L**anguage
 
 !SLIDE
 ##Protocol:
+
+How you send the queries and what you get back.
 
 ###Client Request
 
@@ -47,7 +59,7 @@ WHERE {
   ?person 
     a foaf:Person ;
     foaf:name ?name ;
-    foaf:mbox ?email .
+    foaf:mbox ?email . 
 } 
 ORDER BY ?name
 LIMIT 10
@@ -56,7 +68,8 @@ OFFSET 0
 
 !SLIDE
 #Architecture
-![diagram of data, triplestore, SPARQL Processor, SPARQL endpoint, applications/clients ](img/sparql-arch.png)
+
+![data <= triplestore <= SPARQL Processor <= SPARQL endpoint <= applications/clients ](img/sparql-arch.png)
 
 
 !SLIDE
@@ -94,7 +107,8 @@ WHERE {
 
 # ASK: Uses
 
-* Probing a triple store
+* Probing a triple store for predicates and classes you want
+* Testing for things in your data that you don't want (mistakes!)
 * Authentication (does a user with this email and password hash exist ?)
 
 !SLIDE
@@ -545,13 +559,10 @@ FILTER( xsd:decimal(?mass) &lt; 100.0)
 !SLIDE
 ###  'Between' Dates with `FILTER`
 
-Names of spacecraft launched
-
 @@@ sparql
 PREFIX space: &lt;http://purl.org/net/schemas/space/&gt;
 PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
 PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
-
 SELECT ?name WHERE {
   ?launch space:launched ?date ;
           space:spacecraft ?spacecraft .
@@ -562,7 +573,9 @@ FILTER (
   )
 }
 @@@
+
 (Here the dates have `xsd:date` datatypes in the triple store)
+
 
 !SLIDE
 ### `FILTER`: String matching with `REGEX`
@@ -609,13 +622,22 @@ WHERE
 @@@
 
 !SLIDE
+### `FILTER` accessors
+
+* `str(?o)` - string value of a URI
+* `datatype(?o)` - returns the datatype URI of a typed literal
+* `lang(?o)` - returns the language tag of a literal
+
+
+!SLIDE
 ##More `FILTER`
 
 * tests:
-  * isURI(?o)
-  * isLiteral(?o)
-  * isBlank(?o)
-  * bound(?o)
+  * `isURI(?o)`
+  * `isLiteral(?o)`
+  * `isBlank(?o)`
+  * `bound(?o)`
+  * `langMatches(lang(?o), "EN")`
 * boolean logic:
   * AND `&&`
   * OR `||`
@@ -699,6 +721,13 @@ WHERE {
 }
 @@@
 
+!SLIDE
+## DESCRIBE exercise
+
+* Use `DESCRIBE` to get a description of http://nasa.dataincubator.org/person/charlesmossdukejr
+* Look at an example MissionRole http://nasa.dataincubator.org/mission/apollo-10/role/capsule-communicator/0
+* Write a `DESCRIBE` query to get descriptions of anyone that went on a Mission with *Charles Moss Duke Jr*
+* Make sure you exclude *Charles Moss Duke Jr* from the results
 
 !SLIDE
 
@@ -716,7 +745,26 @@ WHERE
         a ?type . 
 }
 @@@
+
  Returns specific triples
+
+!SLIDE
+### `CONSTRUCT`: Exercise
+
+* Use the [NASA endpoint](http://api.talis.com/stores/space/services/sparql)
+* Write a `CONSTRUCT` that returns the `foaf:name`, `rdf:type`, and `foaf:depiction` of any `space:Spacecraft` 
+* Restrict the query to only `space:Spacecraft` with "Apollo" in their name.
+* Make the `foaf:depiction` optional.
+
+
+!SLIDE
+### `CONSTRUCT`  `FILTER`: Exercise
+
+* Go to http://dbpedia.org/sparql
+* Write a `CONSTRUCT` query that returns a description of http://dbpedia.org/resource/Oslo
+* Use `lang()` to `FILTER` only the property values that are URIs, plain literals, or literals in English.
+* Use `langMatches(lang(?o), "EN")` to match on any variant of English.  
+
  
 !SLIDE
 ##`CONSTRUCT`ing new Triples
@@ -742,9 +790,12 @@ WHERE
 !SLIDE
 ## `CONSTRUCT`: Uses
 
-* Migrating the data model  (or re`CONSTRUCT`ing it on the fly) 
-* Generating new triples
-
+* Migrating the data model  (or re`CONSTRUCT`ing it on the fly). eg: dc to dcterms 
+* Flattening a data model from a complex one
+* Producing a more complex model from a simple one
+* Generate a schema from the way terms are used in the data
+* Inferring new triples from triples in the store + schema
+* Reasoning new triples from triple patterns in the store
 
 !SLIDE
 ### `CONSTRUCT`: Obscure advanced trick
@@ -761,40 +812,22 @@ CONSTRUCT
 } WHERE {}
 @@@
 
-
-!SLIDE
-# Aggregates
-
-* `SUM`
-* `MAX`
-* `MIN`
-* `AVG`
-* `COUNT`
-
 !SLIDE
 
-## `MAX`
+##Gotchas with `CONSTRUCT` and `DESCRIBE`
 
-@@@ sparql
-PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
-PREFIX space: &lt;http://purl.org/net/schemas/space/&gt;
+* `DESCRIBE` underspecified - different triple stores can return different results
+* `ORDER BY` may affect the results, but remember, RDF graphs have no explicit order
+* `LIMIT` limits number of *solutions* to the graph pattern, not the number of *resources* or  *triples*.
+* Can't do "10 Missions and all the pilots who flew on them" - need sub selects (coming in SPARQL 1.1), or 
 
-SELECT (MAX(xsd:decimal(?mass)) AS ?max)
-WHERE 
-{
-  ?s a space:Spacecraft ;
-      space:mass ?mass .
-}
-@@@
+# SPARQL Application Pattern 
 
+The way to deal with the 'gotchas' is:
 
-!SLIDE
-
-### Aggregates: Exercise
-
-1. Find the lowest value of `space:mass` of a `space:Spacecraft`
-
-
+1. Use `SELECT` to generate your ordered list of root resource URIs (eg: 10 missions)
+2. Generate a `CONSTRUCT` from the URIs you got from the SELECT, retrieving the triples you need for each of the resources
+3. 
 
 
 !SLIDE
@@ -818,6 +851,7 @@ WHERE
 * Use `ASK` if you don't need values returned
 * Use `LIMIT` and `OFFSET` to page through large results
 
+
 !SLIDE
 ## Syntactic Sugar and other Weirdness: 
 
@@ -827,3 +861,174 @@ WHERE
 * Variables can be notated as `$foo` as well as `?foo`
 
 
+
+!SLIDE
+# SPARQL 1.1 Aggregates
+
+*SPARQL 1.1*
+
+* `MAX`
+* `COUNT`
+* `SUM`
+* `MIN`
+* `AVG`
+
+
+!SLIDE
+
+## `MAX`
+
+@@@ sparql
+PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+PREFIX space: &lt;http://purl.org/net/schemas/space/&gt;
+
+SELECT (MAX(xsd:decimal(?mass)) AS ?max)
+WHERE 
+{
+  ?s a space:Spacecraft ;
+      space:mass ?mass .
+}
+@@@
+
+!SLIDE
+## `COUNT`
+@@@ sparql
+PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+PREFIX space: &lt;http://purl.org/net/schemas/space/&gt;
+
+SELECT ?personName (COUNT(DISTINCT ?mission) AS ?noOfMissions) 
+WHERE
+{    
+    ?role a space:MissionRole ;
+        space:actor ?person ;
+        space:mission ?mission .
+        
+    ?person foaf:name ?personName .
+} 
+GROUP BY ?personName
+ORDER BY DESC(?noOfMissions)
+@@@
+
+!SLIDE
+## `COUNT` with `HAVING()`
+@@@ sparql
+PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+PREFIX space: &lt;http://purl.org/net/schemas/space/&gt;
+
+SELECT ?personName (COUNT(DISTINCT ?mission) AS ?noOfMissions) 
+WHERE
+{    
+    ?role a space:MissionRole ;
+        space:actor ?person ;
+        space:mission ?mission .
+        
+    ?person foaf:name ?personName .
+}
+GROUP BY ?personName
+HAVING (?noOfMissions &gt; 3)
+ORDER BY DESC(?noOfMissions)
+@@@
+
+
+!SLIDE
+
+### Aggregates: Exercise
+
+1. Find the lowest value of `space:mass` of a `space:Spacecraft`
+2. Write a query that returns a table of *disciplines* with their names, and the number of spacecraft that relate to that discipline.
+3. Sort the table in descending order of most used discipline, with an inner sort on discipline name. 
+
+!SLIDE
+# SPARQL for Analysing your Dataset: Exercise
+
+1. Write a query that returns the number of triples in the dataset
+2. Write a query that returns the number of `rdf:type` triples
+3. Get a unique list of properties used in the dataset
+4. Get a table of class types used, with the number of times they are used.
+
+
+
+!SLIDE
+# SPARQL for testing your Data for mistakes
+eg:
+
+@@@ sparql
+
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt;
+ASK WHERE 
+{
+ ?s owl:sameAs ?o .
+ FILTER(isLiteral(?o))
+}
+@@@
+
+!SLIDE
+
+## SPARQL testing your data: exercise
+
+* Go to [training-exercises SPARQL endpoint](http://myadmin.kwijibo.talis.com/training-exercises/services/sparql)
+* Write an `ASK` query that find if any values of `rdf:type` are literals
+* Write an `ASK` query that finds if any predicates use **http://xmlns.com/foaf/spec/** instead of **http://xmlns.com/foaf/0.1/**.
+* Write an `ASK` query that checks if any literals with an xsd:date are not in the correct format for that datatype.
+
+
+!SLIDE 
+
+
+# SPARQL for generating schema
+
+@@@ sparql
+PREFIX void: &lt;http://rdfs.org/ns/void#&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt;
+PREFIX space: &lt;http://purl.org/net/schemas/space/&gt;
+
+CONSTRUCT {
+?p a owl:ObjectProperty ;
+ rdfs:label &quot;REPLACE ME&quot;@en ;
+ rdfs:comment &quot;REPLACE ME&quot;@en ;
+ rdfs:isDefinedBy space: .
+
+} WHERE {
+ &lt;http://nasa.dataincubator.org/&gt; a void:Dataset ;
+  void:exampleResource ?ex .
+ ?ex  ?p ?o .
+ FILTER(isURI(?o))
+FILTER(regex(str(?p), str(space:)))
+}
+@@@
+
+!SLIDE
+## SPARQL for generating schema: Exercise
+
+ Expand the query on the previous slide to include:
+ 
+1. A description of the **space** ontology - label, comment, type
+2. An `rdfs:domain` for the property
+3. An `rdfs:range` for the property
+
+
+!SLIDE
+# SPARQL for improving your data: Exercise
+
+1. Get a unique list of values for the `space:country` of LaunchSites
+2. Pick one, and find a URI for it (try http://sindice.com)
+3. Write a CONSTRUCT query that will create a triple like : `?launchsite dct:isPartOf <countryUri> .` for every occurrence of `?launchsite space:country "country name" .` 
+
+You could then load these triples back into your store.
+
+!SLIDE
+
+#More Info
+
+* #swig on irc.freenode.net
+* http://sparql.org/
+* The current spec http://www.w3.org/TR/rdf-sparql-query/
+* The 1.1 Spec http://www.w3.org/TR/sparql11-query/
+
+!SLIDE
+
+#Thanks
+
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons Licence" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">A Day of SPARQL</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://keithalexander.co.uk/" property="cc:attributionName" rel="cc:attributionURL">Keith Alexander</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="http://kwijibo.talis.com/training/SPARQL" rel="dct:source">http://kwijibo.talis.com/training/SPARQL</a>.

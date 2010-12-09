@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head>
     <title>Slides</title>
@@ -4782,31 +4783,43 @@ jQuery.extend( jQuery.easing,
         
           <div class="">
             <div id="slide-1" class="content">
-              <p><strong>S</strong>PARQL  <strong>P</strong>rotocol  <strong>A</strong>nd  <strong>R</strong>DF  <strong>Q</strong>uery  <strong>L</strong>anguage</p>
+              <h1>Useful Materials</h1><ul>
+<li><a href="http://api.talis.com/stores/space/services/sparql">NASA data endpoint</a></li>
+<li><a href="http://myadmin.kwijibo.talis.com/space/services/sparql">NASA data endpoint that returns HTML</a></li>
+<li><a href="http://myadmin.kwijibo.talis.com/training-exercises/services/sparql">training-exercises endpoint</a></li>
+<li><a href="http://prefix.cc">prefix.cc</a></li>
+<li><a href="http://kwijibo.talis.com/bookmarklets.html#addPrefix2Sparql">bookmarklet for adding missing prefixes to query</a></li>
+</ul>
             </div>
           </div>
         
           <div class="">
             <div id="slide-2" class="content">
-              <h2>Protocol:</h2><h3>Client Request</h3><p><em><code>GET</code></em> <code>http://example.info/sparql?query={urlencoded query}</code></p><p>(or <em><code>POST</code></em> for very long queries)</p><p>Use content-negotiation to indicate your preferred format for results</p>
+              <p><strong>S</strong>PARQL  <strong>P</strong>rotocol  <strong>A</strong>nd  <strong>R</strong>DF  <strong>Q</strong>uery  <strong>L</strong>anguage</p>
             </div>
           </div>
         
           <div class="">
             <div id="slide-3" class="content">
-              <h2>Protocol:</h2><h3>Server Response</h3><p><code>HTTP 200 OK</code> (if the query was valid)</p><p>results can be serialised in various formats: XML, JSON, Turtle, HTML</p><p><code>HTTP 400 Bad Request</code> (if query wasn't valid)</p>
+              <h2>Protocol:</h2><p>How you send the queries and what you get back.</p><h3>Client Request</h3><p><em><code>GET</code></em> <code>http://example.info/sparql?query={urlencoded query}</code></p><p>(or <em><code>POST</code></em> for very long queries)</p><p>Use content-negotiation to indicate your preferred format for results</p>
             </div>
           </div>
         
           <div class="">
             <div id="slide-4" class="content">
+              <h2>Protocol:</h2><h3>Server Response</h3><p><code>HTTP 200 OK</code> (if the query was valid)</p><p>results can be serialised in various formats: XML, JSON, Turtle, HTML</p><p><code>HTTP 400 Bad Request</code> (if query wasn't valid)</p>
+            </div>
+          </div>
+        
+          <div class="">
+            <div id="slide-5" class="content">
               <h1>Query Language</h1><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">foaf:</span><span class="nn"> &lt;http://xmlns.com/foaf/0.1/&gt;</span>
 <span class="k">SELECT </span><span class="nv">?name ?email</span>
 <span class="k">WHERE</span>{<span class="nv"></span>
 <span class="nv">  ?person</span><span class="o"> </span>
 <span class="o">    a </span><span class="na">foaf:Person </span>;
     <span class="o">foaf:name </span><span class="nv">?name </span>;
-    <span class="o">foaf:mbox </span><span class="nv">?email </span>.
+    <span class="o">foaf:mbox </span><span class="nv">?email </span>. 
 }<span class="err"> </span>
 <span class="err">ORDER BY ?name</span>
 <span class="k">LIMIT</span><span class="s"> 10</span>
@@ -4816,13 +4829,13 @@ jQuery.extend( jQuery.easing,
           </div>
         
           <div class="">
-            <div id="slide-5" class="content">
-              <h1>Architecture</h1><p><img src="img/sparql-arch.png" alt="diagram of data, triplestore, SPARQL Processor, SPARQL endpoint, applications/clients "></p>
+            <div id="slide-6" class="content">
+              <h1>Architecture</h1><p><img src="img/sparql-arch.png" alt="data &lt;= triplestore &lt;= SPARQL Processor &lt;= SPARQL endpoint &lt;= applications/clients "></p>
             </div>
           </div>
         
           <div class="">
-            <div id="slide-6" class="content">
+            <div id="slide-7" class="content">
               <h1>Endpoint</h1><h2>A SPARQL Endpoint for NASA data</h2><form method="POST" action="http://api.talis.com/stores/space/services/sparql">
     <textarea rows="10" cols="40">
 PREFIX space: &lt;http://purl.org/net/schemas/space/&gt; 
@@ -4836,13 +4849,13 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-7" class="content">
+            <div id="slide-8" class="content">
               <h5>Triple Store Conceptually</h5><p><img src="img/triplestore-data-graph.png" alt="picture of data graph"></p>
             </div>
           </div>
         
           <div class="">
-            <div id="slide-8" class="content">
+            <div id="slide-9" class="content">
               <h1>4 Types of Query</h1><ul>
 <li>ASK (true or false)</li>
 <li>SELECT (table)</li>
@@ -4853,16 +4866,17 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-9" class="content">
+            <div id="slide-10" class="content">
               <h1>ASK: Uses</h1><ul>
-<li>Probing a triple store</li>
+<li>Probing a triple store for predicates and classes you want</li>
+<li>Testing for things in your data that you don't want (mistakes!)</li>
 <li>Authentication (does a user with this email and password hash exist ?)</li>
 </ul>
             </div>
           </div>
         
           <div class="">
-            <div id="slide-10" class="content">
+            <div id="slide-11" class="content">
               <h2>ASK: Example</h2><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt; </span>
 <span class="k">PREFIX </span><span class="nv">foaf:</span><span class="nn"> &lt;http://xmlns.com/foaf/0.1/&gt;</span>
 <span class="err">ASK </span>
@@ -4876,13 +4890,13 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-11" class="content">
+            <div id="slide-12" class="content">
               <p><img src="img/match-name-sputnik.png" alt="diagram of pattern matching against something named sputnik"></p>
             </div>
           </div>
         
           <div class="">
-            <div id="slide-12" class="content">
+            <div id="slide-13" class="content">
               <h2>ASK: Example</h2><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt; </span>
 <span class="k">PREFIX </span><span class="nv">foaf:</span><span class="nn"> &lt;http://xmlns.com/foaf/0.1/&gt;</span>
 <span class="err">ASK </span>
@@ -4896,13 +4910,13 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-13" class="content">
+            <div id="slide-14" class="content">
               <p><img src="img/match-name-sputnik.png" alt="diagram of pattern matching against something named sputnik"></p>
             </div>
           </div>
         
           <div class="">
-            <div id="slide-14" class="content">
+            <div id="slide-15" class="content">
               <h2>ASK: is there anything with an rdfs:label ?</h2><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">rdfs:</span><span class="nn"> &lt;http://www.w3.org/2000/01/rdf-schema#&gt;</span>
 <span class="err">ASK </span>
 <span class="k">WHERE</span>{<span class="nv"></span>
@@ -4913,13 +4927,13 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-15" class="content">
+            <div id="slide-16" class="content">
               <p><img src="img/ask-rdfs-label.png" alt="triplestore diagram matching anything with an rdfs:label pattern"></p>
             </div>
           </div>
         
           <div class="">
-            <div id="slide-16" class="content">
+            <div id="slide-17" class="content">
               <h3>Result</h3><div class="highlight xml code highlight"><pre><span class="nt">&lt;sparql</span> <span class="na">xmlns=</span><span class="s">"http://www.w3.org/2005/sparql-results#"</span><span class="nt">&gt;</span> 
         <span class="nt">&lt;head/&gt;</span>
         <span class="nt">&lt;boolean&gt;</span>true<span class="nt">&lt;/boolean&gt;</span>
@@ -4929,7 +4943,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-17" class="content">
+            <div id="slide-18" class="content">
               <h2>ASK: Example</h2><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt; </span>
 <span class="k">PREFIX </span><span class="nv">foaf:</span><span class="nn"> &lt;http://xmlns.com/foaf/0.1/&gt;</span>
 <span class="err">ASK </span>
@@ -4943,7 +4957,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-18" class="content">
+            <div id="slide-19" class="content">
               <h2>ASK: Exercise</h2><p><a href="http://api.talis.com/stores/space/services/sparql">http://bit.ly/nasa-sparql</a></p><p>Use <code>ASK</code> to find if there are any things with:</p><ul>
 <li>an <code>rdf:type</code> property <code>space:Spacecraft</code>, and </li>
 <li>a <code>foaf:depiction</code> (with any value).</li>
@@ -4952,7 +4966,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-19" class="content">
+            <div id="slide-20" class="content">
               <h1>SELECT: Uses</h1><p><code>SELECT</code> returns a table, good for:</p><ul>
 <li>Getting back simple values in a tabular structure.</li>
 <li>Using semantic web data with XML tools (don't use XML tools with RDF/XML!)</li>
@@ -4962,7 +4976,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-20" class="content">
+            <div id="slide-21" class="content">
               <h2>SELECT: Example</h2><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt;</span>
 <span class="k">PREFIX </span><span class="nv">rdf:</span><span class="nn"> &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;</span>
 <span class="k">PREFIX </span><span class="nv">rdfs:</span><span class="nn"> &lt;http://www.w3.org/2000/01/rdf-schema#&gt;</span>
@@ -4980,14 +4994,14 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-21" class="content">
+            <div id="slide-22" class="content">
               <h2>SELECT: Exercise</h2><p>Use <code>SELECT</code> to  get the  URI and <code>foaf:name</code> of all <code>foaf:Person</code> s.</p><p>Don't forget to add the <strong>foaf</strong> prefix:</p><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">foaf:</span><span class="nn"> &lt;http://xmlns.com/foaf/0.1/&gt;</span>
 </pre></div>
             </div>
           </div>
         
           <div class="">
-            <div id="slide-22" class="content">
+            <div id="slide-23" class="content">
               <h2>Too many results!</h2><h2>LIMIT</h2><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">foaf:</span><span class="nn"> &lt;http://xmlns.com/foaf/0.1/&gt;</span>
 <span class="k">SELECT </span><span class="nv">?uri ?name </span>
 <span class="k">WHERE</span>{<span class="nv"></span>
@@ -5000,13 +5014,13 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-23" class="content">
+            <div id="slide-24" class="content">
               <p><img src="img/select-people.png" alt="table from SELECT query"></p>
             </div>
           </div>
         
           <div class="">
-            <div id="slide-24" class="content">
+            <div id="slide-25" class="content">
               <h2>Paging with <code>OFFSET</code>
 </h2><ul>
 <li>
@@ -5018,7 +5032,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-25" class="content">
+            <div id="slide-26" class="content">
               <h1><code>ORDER BY</code></h1><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">foaf:</span><span class="nn"> &lt;http://xmlns.com/foaf/0.1/&gt;</span>
 <span class="k">SELECT </span><span class="nv">?uri ?name </span>
 <span class="k">WHERE</span>{<span class="nv"></span>
@@ -5032,7 +5046,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-26" class="content">
+            <div id="slide-27" class="content">
               <h2><code>ORDER BY</code></h2><h3>Sort Order</h3><ul>
 <li>
 <code>?name</code> <em>ascending alphabetic order</em>
@@ -5054,7 +5068,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-27" class="content">
+            <div id="slide-28" class="content">
               <h2>
 <code>ORDER BY</code> Exercise:</h2><ol>
 <li>Look at an example spacecraft <a href="http://nasa.dataincubator.org/spacecraft/1988-111A">http://nasa.dataincubator.org/spacecraft/1988-111A</a>
@@ -5067,7 +5081,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-28" class="content">
+            <div id="slide-29" class="content">
               <h2>Duplicate Results</h2><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt;</span>
 <span class="k">SELECT   </span><span class="nv">?country </span>
 <span class="k">WHERE</span>{<span class="nv"></span>
@@ -5080,13 +5094,13 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-29" class="content">
+            <div id="slide-30" class="content">
               <h2>Duplicate Results</h2><p><img src="img/duplicate-results.png" alt="table with duplicate results"></p>
             </div>
           </div>
         
           <div class="">
-            <div id="slide-30" class="content">
+            <div id="slide-31" class="content">
               <h1><code>DISTINCT</code></h1><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt;</span>
 <span class="k">SELECT  DISTINCT </span><span class="nv">?country </span>
 <span class="k">WHERE</span>{<span class="nv"></span>
@@ -5099,7 +5113,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-31" class="content">
+            <div id="slide-32" class="content">
               <h2>Duplicate results</h2><h2><code>REDUCED</code></h2><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt;</span>
 <span class="k">SELECT  REDUCED </span><span class="nv">?country </span>
 <span class="k">WHERE</span>{<span class="nv"></span>
@@ -5112,7 +5126,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-32" class="content">
+            <div id="slide-33" class="content">
               <h2>SELECT: Connected Things</h2><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt;</span>
 <span class="k">PREFIX </span><span class="nv">rdfs:</span><span class="nn"> &lt;http://www.w3.org/2000/01/rdf-schema#&gt;</span>
 <span class="k">PREFIX </span><span class="nv">foaf:</span><span class="nn"> &lt;http://xmlns.com/foaf/0.1/&gt;</span>
@@ -5136,7 +5150,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-33" class="content">
+            <div id="slide-34" class="content">
               <h3>SELECT: Connected Things Exercise</h3><p>Write a <code>SELECT</code> query that returns the values of:</p><ol>
 <li>The <code>foaf:name</code> of something that is <code>a space:Spacecraft</code>, and <strong>is  <code>space:spacecraft</code> of</strong>  a <code>space:Launch</code> (ie: <code>?launch space:spacecraft ?craft .</code>)</li>
 <li>The launch date (<code>space:launched</code>)  of the <code>space:Launch</code>
@@ -5148,7 +5162,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-34" class="content">
+            <div id="slide-35" class="content">
               <h3>Connected Things: answer</h3><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt;</span>
 <span class="k">PREFIX </span><span class="nv">rdfs:</span><span class="nn"> &lt;http://www.w3.org/2000/01/rdf-schema#&gt;</span>
 <span class="k">PREFIX </span><span class="nv">foaf:</span><span class="nn"> &lt;http://xmlns.com/foaf/0.1/&gt;</span>
@@ -5173,13 +5187,13 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-35" class="content">
+            <div id="slide-36" class="content">
               <h1>Data is not uniform!</h1>
             </div>
           </div>
         
           <div class="">
-            <div id="slide-36" class="content">
+            <div id="slide-37" class="content">
               <h3>Get images for Spacecraft</h3><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt;</span>
 <span class="k">PREFIX </span><span class="nv">foaf:</span><span class="nn"> &lt;http://xmlns.com/foaf/0.1/&gt;</span>
 
@@ -5194,14 +5208,14 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-37" class="content">
+            <div id="slide-38" class="content">
               <h2>Data is not uniform</h2><p>Look at: 
 <a href="http://nasa.dataincubator.org/spacecraft/1988-111A">http://nasa.dataincubator.org/spacecraft/1988-111A</a></p>
             </div>
           </div>
         
           <div class="">
-            <div id="slide-38" class="content">
+            <div id="slide-39" class="content">
               <h1><code>OPTIONAL</code></h1><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt;</span>
 <span class="k">PREFIX </span><span class="nv">foaf:</span><span class="nn"> &lt;http://xmlns.com/foaf/0.1/&gt;</span>
 
@@ -5221,7 +5235,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-39" class="content">
+            <div id="slide-40" class="content">
               <h2>Data is not uniform</h2><h3>Different patterns doing the same thing</h3><div class="highlight sparql code highlight"><pre><span class="err">?s a space:Spacecraft ;</span>
 <span class="err">    foaf:name ?label .</span>
 </pre></div><div class="highlight sparql code highlight"><pre><span class="err">?s a space:Discipline ;</span>
@@ -5231,7 +5245,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-40" class="content">
+            <div id="slide-41" class="content">
               <h1><code>UNION</code></h1><h3>Binds different patterns to the same variable names</h3><div class="highlight sparql code highlight"><pre><span class="k">SELECT </span><span class="nv">?s  ?label </span>
 <span class="k">WHERE</span>{
 {<span class="nv"></span>
@@ -5250,7 +5264,7 @@ WHERE {
           </div>
         
           <div class=" ">
-            <div id="slide-41" class="content">
+            <div id="slide-42" class="content">
               <h1>Evaluation values with <code>FILTER</code>
 </h1><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt;</span>
 <span class="k">SELECT </span><span class="nv">?s </span>
@@ -5264,19 +5278,18 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-42" class="content">
+            <div id="slide-43" class="content">
               <h3>Evaluating values with FILTER</h3><p><code>?mass</code> is only a plain literal in the triple store</p><p><code>100.0</code> is a Decimal</p><p>We can cast ?mass to an xsd datatype to compare it to a decimal</p><div class="highlight sparql code highlight"><pre><span class="err">FILTER( xsd:decimal(?mass) &lt; 100.0)</span>
 </pre></div>
             </div>
           </div>
         
           <div class="">
-            <div id="slide-43" class="content">
+            <div id="slide-44" class="content">
               <h3>'Between' Dates with <code>FILTER</code>
-</h3><p>Names of spacecraft launched</p><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt;</span>
+</h3><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt;</span>
 <span class="k">PREFIX </span><span class="nv">foaf:</span><span class="nn"> &lt;http://xmlns.com/foaf/0.1/&gt;</span>
 <span class="k">PREFIX </span><span class="nv">xsd:</span><span class="nn"> &lt;http://www.w3.org/2001/XMLSchema#&gt;</span>
-
 <span class="k">SELECT </span><span class="nv">?name </span><span class="k">WHERE</span>{<span class="nv"></span>
 <span class="nv">  ?launch</span><span class="o"> space:launched </span><span class="nv">?date </span>;
           <span class="o">space:spacecraft </span><span class="nv">?spacecraft </span>.
@@ -5286,12 +5299,12 @@ WHERE {
 <span class="err">  ?date &lt;= "1969-12-31"^^xsd:date</span>
 <span class="err">  )</span>
 <span class="err">}</span>
-</pre></div><code>xsd:date</code>
+</pre></div><p>(Here the dates have <code>xsd:date</code> datatypes in the triple store)</p>
             </div>
           </div>
         
           <div class="">
-            <div id="slide-44" class="content">
+            <div id="slide-45" class="content">
               <h3>
 <code>FILTER</code>: String matching with <code>REGEX</code>
 </h3><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt;</span>
@@ -5308,7 +5321,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-45" class="content">
+            <div id="slide-46" class="content">
               <h4>Advanced REGEX trick</h4><p>Store <strong>regular expressions</strong> as <em>data</em>, and use them in your queries.</p><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">void:</span><span class="nn"> &lt;http://rdfs/org/ns/void#&gt;</span>
 <span class="k">SELECT </span><span class="nv">?dataset</span>
 <span class="k">WHERE</span>{<span class="nv"></span>
@@ -5321,7 +5334,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-46" class="content">
+            <div id="slide-47" class="content">
               <h5>If you described your regexes as RDF you could:</h5><div class="highlight sparql code highlight"><pre><span class="k">SELECT </span><span class="nv">?uri ?invalidPostcode</span>
 <span class="k">WHERE</span>{<span class="nv"></span>
 <span class="nv">    ?uri</span><span class="o"> ex:postcode </span><span class="nv">?invalidPostcode </span>.
@@ -5333,15 +5346,30 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-47" class="content">
+            <div id="slide-48" class="content">
+              <h3>
+<code>FILTER</code> accessors</h3><ul>
+<li>
+<code>str(?o)</code> - string value of a URI</li>
+<li>
+<code>datatype(?o)</code> - returns the datatype URI of a typed literal</li>
+<li>
+<code>lang(?o)</code> - returns the language tag of a literal</li>
+</ul>
+            </div>
+          </div>
+        
+          <div class="">
+            <div id="slide-49" class="content">
               <h2>More <code>FILTER</code>
 </h2><ul>
 <li>tests:
 <ul>
-<li>isURI(?o)</li>
-<li>isLiteral(?o)</li>
-<li>isBlank(?o)</li>
-<li>bound(?o)</li>
+<li><code>isURI(?o)</code></li>
+<li><code>isLiteral(?o)</code></li>
+<li><code>isBlank(?o)</code></li>
+<li><code>bound(?o)</code></li>
+<li><code>langMatches(lang(?o), "EN")</code></li>
 </ul>
 </li>
 <li>boolean logic:
@@ -5363,10 +5391,14 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-48" class="content">
+            <div id="slide-50" class="content">
               <h2>Patterns <em>Without</em> a sub pattern</h2><p>The <code>OPTIONAL FILTER !bound</code> technique:
 </p>
-<div class="highlight sparql code highlight"><pre>{<span class="nv"></span>
+<div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt;</span>
+<span class="k">PREFIX </span><span class="nv">foaf:</span><span class="nn"> &lt;http://xmlns.com/foaf/0.1/&gt;</span>
+
+<span class="k">SELECT </span><span class="nv">?s</span>
+<span class="k">WHERE</span>{<span class="nv"></span>
 <span class="nv">    ?s</span><span class="o"> a </span><span class="na">space:Spacecraft </span>.
     <span class="err">OPTIONAL {</span><span class="nv"></span>
 <span class="nv">        ?s</span><span class="o"> foaf:depiction </span><span class="nv">?img </span>.
@@ -5378,7 +5410,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-49" class="content">
+            <div id="slide-51" class="content">
               <h2>
 <code>FILTER</code> exercise:</h2><p>Find URIs that are linked to, but not described.</p><ul>
 <li>What is a pattern for  <code>?o</code> where  <code>?o</code> is linked to by something?</li>
@@ -5390,7 +5422,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-50" class="content">
+            <div id="slide-52" class="content">
               <h1><code>DESCRIBE</code></h1><p>Returns RDF about any matching resources</p><h2>Uses:</h2><ul>
 <li>Getting back stuff you didn't know existed</li>
 </ul>
@@ -5398,7 +5430,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-51" class="content">
+            <div id="slide-53" class="content">
               <h2>DESCRIBE: known URIs</h2><div class="highlight sparql code highlight"><pre><span class="err">DESCRIBE </span>
 <span class="err">&lt;http://nasa.dataincubator.org/spacecraft/1957-001B&gt;</span>
 <span class="err">&lt;http://nasa.dataincubator.org/spacecraft/1988-111A&gt;</span>
@@ -5407,7 +5439,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-52" class="content">
+            <div id="slide-54" class="content">
               <h2>DESCRIBE: pattern matches</h2><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt;</span>
 <span class="k">PREFIX </span><span class="nv">rdfs:</span><span class="nn"> &lt;http://www.w3.org/2000/01/rdf-schema#&gt;</span>
 <span class="k">PREFIX </span><span class="nv">foaf:</span><span class="nn"> &lt;http://xmlns.com/foaf/0.1/&gt;</span>
@@ -5430,7 +5462,19 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-53" class="content">
+            <div id="slide-55" class="content">
+              <h2>DESCRIBE exercise</h2><ul>
+<li>Use <code>DESCRIBE</code> to get a description of http://nasa.dataincubator.org/person/charlesmossdukejr</li>
+<li>Look at an example MissionRole http://nasa.dataincubator.org/mission/apollo-10/role/capsule-communicator/0</li>
+<li>Write a <code>DESCRIBE</code> query to get descriptions of anyone that went on a Mission with <em>Charles Moss Duke Jr</em>
+</li>
+<li>Make sure you exclude <em>Charles Moss Duke Jr</em> from the results</li>
+</ul>
+            </div>
+          </div>
+        
+          <div class="">
+            <div id="slide-56" class="content">
               <h1><code>CONSTRUCT</code></h1><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">rdfs:</span><span class="nn"> &lt;http://www.w3.org/2000/01/rdf-schema#&gt;</span>
 <span class="err">CONSTRUCT</span>{<span class="nv"></span>
 <span class="nv">    ?s</span><span class="o"> rdfs:label </span><span class="nv">?label </span>; 
@@ -5440,12 +5484,37 @@ WHERE {
 <span class="nv">    ?s</span><span class="o"> rdfs:label </span><span class="nv">?label </span>;
         <span class="o">a </span><span class="nv">?type </span>. 
 }
-</pre></div>
+</pre></div><p>Returns specific triples</p>
             </div>
           </div>
         
           <div class="">
-            <div id="slide-54" class="content">
+            <div id="slide-57" class="content">
+              <h3>
+<code>CONSTRUCT</code>: Exercise</h3><ul>
+<li>Use the <a href="http://api.talis.com/stores/space/services/sparql">NASA endpoint</a>
+</li>
+<li>Write a <code>CONSTRUCT</code> that returns the <code>foaf:name</code>, <code>rdf:type</code>, and <code>foaf:depiction</code> of any <code>space:Spacecraft</code> </li>
+<li>Restrict the query to only <code>space:Spacecraft</code> with "Apollo" in their name.</li>
+<li>Make the <code>foaf:depiction</code> optional.</li>
+</ul>
+            </div>
+          </div>
+        
+          <div class="">
+            <div id="slide-58" class="content">
+              <h3>
+<code>CONSTRUCT</code>  <code>FILTER</code>: Exercise</h3><ul>
+<li>Go to http://dbpedia.org/sparql</li>
+<li>Write a <code>CONSTRUCT</code> query that returns a description of http://dbpedia.org/resource/Oslo</li>
+<li>Use <code>lang()</code> to <code>FILTER</code> only the property values that are URIs, plain literals, or literals in English.</li>
+<li>Use <code>langMatches(lang(?o), "EN")</code> to match on any variant of English.  </li>
+</ul>
+            </div>
+          </div>
+        
+          <div class="">
+            <div id="slide-59" class="content">
               <h2>
 <code>CONSTRUCT</code>ing new Triples</h2><p>You can remodel the data matched by the query into new triples:</p><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">rdfs:</span><span class="nn"> &lt;http://www.w3.org/2000/01/rdf-schema#&gt;</span>
 <span class="k">PREFIX </span><span class="nv">foaf:</span><span class="nn"> &lt;http://xmlns.com/foaf/0.1/&gt;</span>
@@ -5457,24 +5526,26 @@ WHERE {
 <span class="nv">    ?s</span><span class="o"> foaf:name </span><span class="nv">?label </span>;
         <span class="o">a </span><span class="nv">?type </span>. 
 }
-
-<span class="err">@@</span>
 </pre></div>
             </div>
           </div>
         
           <div class="">
-            <div id="slide-55" class="content">
+            <div id="slide-60" class="content">
               <h2>
 <code>CONSTRUCT</code>: Uses</h2><ul>
-<li>Migrating the data model  (or re<code>CONSTRUCT</code>ing it on the fly) </li>
-<li>Generating new triples</li>
+<li>Migrating the data model  (or re<code>CONSTRUCT</code>ing it on the fly). eg: dc to dcterms </li>
+<li>Flattening a data model from a complex one</li>
+<li>Producing a more complex model from a simple one</li>
+<li>Generate a schema from the way terms are used in the data</li>
+<li>Inferring new triples from triples in the store + schema</li>
+<li>Reasoning new triples from triple patterns in the store</li>
 </ul>
             </div>
           </div>
         
           <div class="">
-            <div id="slide-56" class="content">
+            <div id="slide-61" class="content">
               <h3>
 <code>CONSTRUCT</code>: Obscure advanced trick</h3><p>You don't need to take any values from the <code>WHERE</code> clause.</p><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">foaf:</span><span class="nn"> &lt;http://xmlns.com/foaf/0.1/&gt;</span>
 <span class="err">CONSTRUCT</span>{
@@ -5487,42 +5558,27 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-57" class="content">
-              <h1>Aggregates</h1><ul>
-<li><code>SUM</code></li>
-<li><code>MAX</code></li>
-<li><code>MIN</code></li>
-<li><code>AVG</code></li>
-<li><code>COUNT</code></li>
+            <div id="slide-62" class="content">
+              <h2>Gotchas with <code>CONSTRUCT</code> and <code>DESCRIBE</code>
+</h2><ul>
+<li>
+<code>DESCRIBE</code> underspecified - different triple stores can return different results</li>
+<li>
+<code>ORDER BY</code> may affect the results, but remember, RDF graphs have no explicit order</li>
+<li>
+<code>LIMIT</code> limits number of <em>solutions</em> to the graph pattern, not the number of <em>resources</em> or  <em>triples</em>.</li>
+<li>Can't do "10 Missions and all the pilots who flew on them" - need sub selects (coming in SPARQL 1.1), or </li>
 </ul>
-            </div>
-          </div>
-        
-          <div class="">
-            <div id="slide-58" class="content">
-              <h2><code>MAX</code></h2><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">xsd:</span><span class="nn"> &lt;http://www.w3.org/2001/XMLSchema#&gt;</span>
-<span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt;</span>
-
-<span class="err">SELECT (MAX(xsd:decimal(?mass)) AS ?max)</span>
-<span class="k">WHERE</span>{<span class="nv"></span>
-<span class="nv">  ?s</span><span class="o"> a </span><span class="na">space:Spacecraft </span>;
-      <span class="o">space:mass </span><span class="nv">?mass </span>.
-}
-</pre></div>
-            </div>
-          </div>
-        
-          <div class="">
-            <div id="slide-59" class="content">
-              <h3>Aggregates: Exercise</h3><ol>
-<li>Find the lowest value of <code>space:mass</code> of a <code>space:Spacecraft</code>
-</li>
+<h1>SPARQL Application Pattern</h1><p>The way to deal with the 'gotchas' is:</p><ol>
+<li>Use <code>SELECT</code> to generate your ordered list of root resource URIs (eg: 10 missions)</li>
+<li>Generate a <code>CONSTRUCT</code> from the URIs you got from the SELECT, retrieving the triples you need for each of the resources</li>
+3. 
 </ol>
             </div>
           </div>
         
           <div class="">
-            <div id="slide-60" class="content">
+            <div id="slide-63" class="content">
               <h1>Performance</h1><h2>Things that make queries slow:</h2><ul>
 <li>variable-heavy graph patterns (<code>?s ?p ?o</code>)</li>
 <li>variables that aren't connected in the graph pattern (<code>?s ?p ?o . ?x ?y ?z</code> ) - Cross product!</li>
@@ -5548,7 +5604,7 @@ WHERE {
           </div>
         
           <div class="">
-            <div id="slide-61" class="content">
+            <div id="slide-64" class="content">
               <h2>Syntactic Sugar and other Weirdness:</h2><ul>
 <li>
 <code>WHERE</code> isn't required (except with <code>CONSTRUCT</code>)</li>
@@ -5562,7 +5618,186 @@ WHERE {
             </div>
           </div>
         
+          <div class="">
+            <div id="slide-65" class="content">
+              <h1>SPARQL 1.1 Aggregates</h1><p><em>SPARQL 1.1</em></p><ul>
+<li><code>MAX</code></li>
+<li><code>COUNT</code></li>
+<li><code>SUM</code></li>
+<li><code>MIN</code></li>
+<li><code>AVG</code></li>
+</ul>
+            </div>
+          </div>
+        
+          <div class="">
+            <div id="slide-66" class="content">
+              <h2><code>MAX</code></h2><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">xsd:</span><span class="nn"> &lt;http://www.w3.org/2001/XMLSchema#&gt;</span>
+<span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt;</span>
+
+<span class="err">SELECT (MAX(xsd:decimal(?mass)) AS ?max)</span>
+<span class="k">WHERE</span>{<span class="nv"></span>
+<span class="nv">  ?s</span><span class="o"> a </span><span class="na">space:Spacecraft </span>;
+      <span class="o">space:mass </span><span class="nv">?mass </span>.
+}
+</pre></div>
+            </div>
+          </div>
+        
+          <div class="">
+            <div id="slide-67" class="content">
+              <h2><code>COUNT</code></h2><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">xsd:</span><span class="nn"> &lt;http://www.w3.org/2001/XMLSchema#&gt;</span>
+<span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt;</span>
+
+<span class="k">SELECT </span><span class="nv">?personName </span><span class="err">(COUNT(DISTINCT ?mission) AS ?noOfMissions) </span>
+<span class="k">WHERE</span>{<span class="nv"></span>
+<span class="nv">    ?role</span><span class="o"> a </span><span class="na">space:MissionRole </span>;
+        <span class="o">space:actor </span><span class="nv">?person </span>;
+        <span class="o">space:mission </span><span class="nv">?mission </span>.
+
+<span class="nv">?person</span><span class="o"> foaf:name </span><span class="nv">?personName </span>.
+
+
+}<span class="err"> </span>
+<span class="err">GROUP BY ?personName</span>
+<span class="err">ORDER BY DESC(?noOfMissions)</span>
+</pre></div>
+            </div>
+          </div>
+        
+          <div class="">
+            <div id="slide-68" class="content">
+              <h2>
+<code>COUNT</code> with <code>HAVING()</code>
+</h2><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">xsd:</span><span class="nn"> &lt;http://www.w3.org/2001/XMLSchema#&gt;</span>
+<span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt;</span>
+
+<span class="k">SELECT </span><span class="nv">?personName </span><span class="err">(COUNT(DISTINCT ?mission) AS ?noOfMissions) </span>
+<span class="k">WHERE</span>{<span class="nv"></span>
+<span class="nv">    ?role</span><span class="o"> a </span><span class="na">space:MissionRole </span>;
+        <span class="o">space:actor </span><span class="nv">?person </span>;
+        <span class="o">space:mission </span><span class="nv">?mission </span>.
+
+<span class="nv">?person</span><span class="o"> foaf:name </span><span class="nv">?personName </span>.
+
+
+}
+<span class="err">GROUP BY ?personName</span>
+<span class="err">HAVING (?noOfMissions &gt; 3)</span>
+<span class="err">ORDER BY DESC(?noOfMissions)</span>
+</pre></div>
+            </div>
+          </div>
+        
+          <div class="">
+            <div id="slide-69" class="content">
+              <h3>Aggregates: Exercise</h3><ol>
+<li>Find the lowest value of <code>space:mass</code> of a <code>space:Spacecraft</code>
+</li>
+<li>Write a query that returns a table of <em>disciplines</em> with their names, and the number of spacecraft that relate to that discipline.</li>
+<li>Sort the table in descending order of most used discipline, with an inner sort on discipline name. </li>
+</ol>
+            </div>
+          </div>
+        
+          <div class="">
+            <div id="slide-70" class="content">
+              <h1>SPARQL for Analysing your Dataset: Exercise</h1><ol>
+<li>Write a query that returns the number of triples in the dataset</li>
+<li>Write a query that returns the number of <code>rdf:type</code> triples</li>
+<li>Get a unique list of properties used in the dataset</li>
+<li>Get a table of class types used, with the number of times they are used.</li>
+</ol>
+            </div>
+          </div>
+        
+          <div class="">
+            <div id="slide-71" class="content">
+              <h1>SPARQL for testing your Data for mistakes</h1><p>eg:</p><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">owl:</span><span class="nn"> &lt;http://www.w3.org/2002/07/owl#&gt;</span>
+<span class="err">ASK </span><span class="k">WHERE</span>{<span class="nv"></span>
+<span class="nv"> ?s</span><span class="o"> owl:sameAs </span><span class="nv">?o </span>.
+ <span class="k">FILTER</span>(<span class="na">isLiteral</span>(<span class="nv">?o</span>))
+}
+</pre></div>
+            </div>
+          </div>
+        
+          <div class="">
+            <div id="slide-72" class="content">
+              <h2>SPARQL testing your data: exercise</h2><ul>
+<li>Go to <a href="http://myadmin.kwijibo.talis.com/training-exercises/services/sparql">training-exercises SPARQL endpoint</a>
+</li>
+<li>Write an <code>ASK</code> query that find if any values of <code>rdf:type</code> are literals</li>
+<li>Write an <code>ASK</code> query that finds if any predicates use <strong>http://xmlns.com/foaf/spec/</strong> instead of <strong>http://xmlns.com/foaf/0.1/</strong>.</li>
+<li>Write an <code>ASK</code> query that checks if any literals with an xsd:date are not in the correct format for that datatype.</li>
+</ul>
+            </div>
+          </div>
+        
+          <div class=" 
+">
+            <div id="slide-73" class="content">
+              <h1>SPARQL for generating schema</h1><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">void:</span><span class="nn"> &lt;http://rdfs.org/ns/void#&gt;</span>
+<span class="k">PREFIX </span><span class="nv">rdf:</span><span class="nn"> &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;</span>
+<span class="k">PREFIX </span><span class="nv">rdfs:</span><span class="nn"> &lt;http://www.w3.org/2000/01/rdf-schema#&gt;</span>
+<span class="k">PREFIX </span><span class="nv">owl:</span><span class="nn"> &lt;http://www.w3.org/2002/07/owl#&gt;</span>
+<span class="k">PREFIX </span><span class="nv">space:</span><span class="nn"> &lt;http://purl.org/net/schemas/space/&gt;</span>
+
+<span class="err">CONSTRUCT</span>{<span class="nv"></span>
+<span class="nv">?p</span><span class="o"> a </span><span class="na">owl:ObjectProperty </span>;
+ <span class="o">rdfs:label </span><span class="s">"REPLACE ME"</span><span class="err">@</span><span class="na">en </span>;
+ <span class="o">rdfs:comment </span><span class="s">"REPLACE ME"</span><span class="err">@</span><span class="na">en </span>;
+ <span class="o">rdfs:isDefinedBy </span><span class="na">space: </span>.
+
+}<span class="err"> </span><span class="k">WHERE</span>{<span class="nc"></span>
+<span class="nc"> &lt;http://nasa.dataincubator.org/&gt;</span><span class="o"> a </span><span class="na">void:Dataset </span>;
+  <span class="o">void:exampleResource </span><span class="nv">?ex </span>.
+ <span class="nv">?ex  ?p ?o </span>.
+ <span class="k">FILTER</span>(<span class="na">isURI</span>(<span class="nv">?o</span>))<span class="k">FILTER</span>(<span class="na">regex</span>(<span class="na">str</span>(<span class="nv">?p</span>)<span class="err">,</span><span class="na"> str</span>(<span class="na">space:</span>)))
+}
+</pre></div>
+            </div>
+          </div>
+        
+          <div class="">
+            <div id="slide-74" class="content">
+              <h2>SPARQL for generating schema: Exercise</h2><p>Expand the query on the previous slide to include:</p><ol>
+<li>A description of the <strong>space</strong> ontology - label, comment, type</li>
+<li>An <code>rdfs:domain</code> for the property</li>
+<li>An <code>rdfs:range</code> for the property</li>
+</ol>
+            </div>
+          </div>
+        
+          <div class="">
+            <div id="slide-75" class="content">
+              <h1>SPARQL for improving your data: Exercise</h1><ol>
+<li>Get a unique list of values for the <code>space:country</code> of LaunchSites</li>
+<li>Pick one, and find a URI for it (try http://sindice.com)</li>
+<li>Write a CONSTRUCT query that will create a triple like : <code>?launchsite dct:isPartOf &lt;countryUri&gt; .</code> for every occurrence of <code>?launchsite space:country "country name" .</code> </li>
+</ol>
+<p>You could then load these triples back into your store.</p>
+            </div>
+          </div>
+        
+          <div class="">
+            <div id="slide-76" class="content">
+              <h1>More Info</h1><ul>
+<li>#swig on irc.freenode.net</li>
+<li>http://sparql.org/</li>
+<li>The current spec http://www.w3.org/TR/rdf-sparql-query/</li>
+<li>The 1.1 Spec http://www.w3.org/TR/sparql11-query/</li>
+</ul>
+            </div>
+          </div>
+        
+          <div class="">
+            <div id="slide-77" class="content">
+              <h1>Thanks</h1><p><a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons Licence" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png"></a><br><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">A Day of SPARQL</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://keithalexander.co.uk/" property="cc:attributionName" rel="cc:attributionURL">Keith Alexander</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.<br>Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="http://kwijibo.talis.com/training/SPARQL" rel="dct:source">http://kwijibo.talis.com/training/SPARQL</a>.</p>
+            </div>
+          </div>
+        
       </div>
     </div>
-  <script type="text/javascript" src="slides.js"></script></body>
+  </body>
 </html>

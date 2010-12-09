@@ -142,14 +142,14 @@ h1 , h2, h3, h4 {
 }
 
 h1 {
-	color: #135D99;
+	color: #306499;
 }
 h2{
 	color: green;
 }
 
 h3 {
-	color: color: #DDD;
+	color: #A85B38;
 }
 h4 {
 	color: yellow;
@@ -172,4 +172,7 @@ p {
 }
 li {
 	padding-left: 1em;
+}
+a img {
+	width: auto;
 }
