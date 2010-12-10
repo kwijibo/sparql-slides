@@ -895,6 +895,47 @@ The way to deal with the 'gotchas' is:
 2. Generate a `CONSTRUCT` to query for a description of the URIs you got from the SELECT, retrieving the triples you need for each of the resources. No `ORDER BY` or `LIMIT` should be used in this query.
 3. Use the response from the `SELECT` to render the descriptions from the `CONSTRUCT` response in the correct order.
 
+!SLIDE
+# Graphs: `FROM`
+
+A **graph** is set of triples.
+
+Triplestores can group triples into graphs and name the graphs.
+
+You can specify which graphs you want to query over:
+
+@@@ sparql
+SELECT ?name ?favouriteSpacesuit
+FROM &lt;http://example.com/astronauts&gt;
+WHERE { ... }
+@@@
+
+!SLIDE
+## Graphs: `FROM NAMED`
+
+You can be specific about which graph to use for a sub-pattern in your query:
+
+@@@ sparql
+SELECT ?name ?favouriteSpacesuit
+FROM NAMED &lt;http://example.com/astronauts&gt;
+FROM NAMED &lt;http://example.com/spacesuits&gt;
+WHERE { 
+ GRAPH &lt;http://example.com/astronauts&gt; {
+     ?s foaf:name ?name .
+ }
+ GRAPH &lt;http://example.com/spacesuits&gt; {
+     ?s foaf:name ?favouriteSpacesuit .
+ }    
+     
+}
+@@@
+
+!SLIDE
+## Graphs: Exercise
+
+* Go to http://sparql.org/sparql.html - this endpoint will fetch RDF/XML documents as graphs over the web
+* Write a `SELECT` query that returns the URI and `rdfs:label` of every `rdf:Property` **from** http://xmlns.com/foaf/0.1/
+
 
 !SLIDE
 
@@ -933,15 +974,23 @@ The way to deal with the 'gotchas' is:
 
 
 !SLIDE
+#Common Problems
+
+* Typos wrong case for property or class name: `foaf:basedNear` instead of `foaf:based_near`
+* wrong prefix URI missing # or / or the URI for the web page of the spec, not the namespace (eg: http://xmlns.com/foaf/spec/ instead of http://xmlns.com/foaf/0.1/)
+* Missing OPTIONAL - you won't even notice you're missing results...
+* Comparing Literals Literals are compared on all of value, type and language: `"foo"` in the query will not match `"foo"@en`  in the triple store.
+
+!SLIDE
 # SPARQL 1.1 Aggregates
 
 *SPARQL 1.1*
 
-* `MAX`
-* `COUNT`
-* `SUM`
-* `MIN`
-* `AVG`
+* `MAX`     - largest number from all values
+* `COUNT`   - number of values
+* `SUM`     - total of all values added together
+* `MIN`     - lowest number of all values
+* `AVG`     - average number from all values
 
 
 !SLIDE
@@ -1105,8 +1154,9 @@ You could then load these triples back into your store.
 
 * #swig on irc.freenode.net
 * http://sparql.org/
-* The current spec http://www.w3.org/TR/rdf-sparql-query/
-* The 1.1 Spec http://www.w3.org/TR/sparql11-query/
+* The [current spec](http://www.w3.org/TR/rdf-sparql-query/) http://www.w3.org/TR/rdf-sparql-query/
+* The [SPARQL 1.1 Spec](http://www.w3.org/TR/sparql11-query/) http://www.w3.org/TR/sparql11-query/
+* [SPARQL Cheatsheet slideshow](http://www.slideshare.net/LeeFeigenbaum/sparql-cheat-sheet) http://www.slideshare.net/LeeFeigenbaum/sparql-cheat-sheet 
 
 ## Tools
 
