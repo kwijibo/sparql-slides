@@ -3,6 +3,7 @@
 #A Day of SPARQL 
 
 ##  Keith Alexander
+### keith.alexander@talis.com
 
 !SLIDE
 #Useful Materials
@@ -77,7 +78,7 @@ OFFSET 0
 
 ## A SPARQL Endpoint for NASA data
 <form method="POST" action="http://api.talis.com/stores/space/services/sparql">
-    <textarea rows="10" cols="40">
+    <textarea rows="10" cols="40" name="query">
 PREFIX space: &lt;http://purl.org/net/schemas/space/&gt; 
 SELECT ?craft 
 WHERE {
@@ -98,10 +99,10 @@ WHERE {
 
 # 4 Types of Query
 
-* ASK (true or false)
-* SELECT (table)
-* DESCRIBE (resource descriptions)
-* CONSTRUCT (triples)
+* `ASK` (true or false)
+* `SELECT` (table)
+* `DESCRIBE` (resource descriptions)
+* `CONSTRUCT` (triples)
 
 !SLIDE
 
@@ -113,7 +114,7 @@ WHERE {
 
 !SLIDE
 
-##ASK: Example
+##`ASK`: Example
 @@@ sparql
 
 PREFIX space: &lt;http://purl.org/net/schemas/space/&gt; 
@@ -130,11 +131,20 @@ WHERE {
 
 ![diagram of pattern matching against something named sputnik](img/match-name-sputnik.png)
 
+!SLIDE
+
+###`ASK`  Result
+@@@ xml
+&lt;sparql xmlns=&quot;http://www.w3.org/2005/sparql-results#&quot;&gt; 
+        &lt;head/&gt;
+        &lt;boolean&gt;true&lt;/boolean&gt;
+&lt;/sparql&gt;
+@@@
 
 
 !SLIDE
 
-##ASK: Example
+##`ASK`: Example
 @@@ sparql
 
 PREFIX space: &lt;http://purl.org/net/schemas/space/&gt; 
@@ -154,7 +164,7 @@ WHERE {
 
 !SLIDE
 
-##ASK: is there anything with an rdfs:label ?
+##`ASK`: is there anything with an rdfs:label ?
 
 @@@ sparql
 
@@ -170,21 +180,12 @@ WHERE {
 
 ![triplestore diagram matching anything with an rdfs:label pattern](img/ask-rdfs-label.png)
 
-!SLIDE
-
-### Result
-@@@ xml
-&lt;sparql xmlns=&quot;http://www.w3.org/2005/sparql-results#&quot;&gt; 
-        &lt;head/&gt;
-        &lt;boolean&gt;true&lt;/boolean&gt;
-&lt;/sparql&gt;
-@@@
 
 
 
 !SLIDE
 
-##ASK: Example
+##`ASK`: Example
 @@@ sparql
 
 PREFIX space: &lt;http://purl.org/net/schemas/space/&gt; 
@@ -200,7 +201,7 @@ WHERE {
 
 
 !SLIDE
-##ASK: Exercise
+##`ASK`: Exercise
 
 
 
@@ -289,6 +290,14 @@ LIMIT 10
 
 * `LIMIT` is page size
 * `OFFSET` is starting point: page size * (page number - 1)
+
+!SLIDE
+## `LIMIT` and `OFFSET` Paging Exercise
+
+Imagine you are writing a web page that shows a list of people, 10 per page.
+
+
+Modify your query from the last exercise to return page 3 of the results.
 
 !SLIDE
 
@@ -634,18 +643,19 @@ WHERE
 !SLIDE
 ##More `FILTER`
 
-* tests:
-  * `isURI(?o)`
-  * `isLiteral(?o)`
-  * `isBlank(?o)`
-  * `bound(?o)`
-  * `langMatches(lang(?o), "EN")`
 * boolean logic:
   * AND `&&`
   * OR `||`
   * NOT `!`
   * Equal `=`
   * Not Equal `!=`
+* tests:
+* `isURI(?o)`
+* `isLiteral(?o)`
+* `isBlank(?o)`
+* `langMatches(lang(?o), "EN")`
+* `bound(?o)`
+
 
 !SLIDE
 ## Patterns *Without* a sub pattern
@@ -682,10 +692,27 @@ Find URIs that are linked to, but not described.
 
 # `DESCRIBE`
 
-Returns RDF about any matching resources
+Returns RDF descriptions of any matching resources
 
 ## Uses:
-* Getting back stuff you didn't know existed
+
+* Getting back complete descriptions of stuff
+* Getting back properties you didn't know existed
+
+!SLIDE
+
+##`DESCRIBE`: What is a description?
+
+Not specified by the spec, but something similar to:
+
+@@@ sparql
+ &lt;thingToBeDescribed&gt; ?p ?o .
+@@@
+
+and if `?o` is a blank node, also:
+@@@ sparql
+ ?o ?p2 ?o2
+@@@
 
 !SLIDE
 ## DESCRIBE: known URIs
@@ -758,16 +785,41 @@ WHERE
 * Restrict the query to only `space:Spacecraft` with "Apollo" in their name.
 * Make the `foaf:depiction` optional.
 
+!SLIDE
+
+### `CONSTRUCT` Exercise: extended descriptions
+
+`CONSTRUCT` a description of http://nasa.dataincubator.org/spacecraft/1957-001B which has:
+
+* All the properties and values  of http://nasa.dataincubator.org/spacecraft/1957-001B
+* The `rdf:type` and `rdfs:label` of every thing that **Sputnik 1** links to.
+* All the triples linking in to http://nasa.dataincubator.org/spacecraft/1957-001B (ie, **Sputnik 1** is in *object* position).
+* The `rdf:type` and `rdfs:label` of every thing that links to **Sputnik 1**.
 
 !SLIDE
-### `CONSTRUCT`  `FILTER`: Exercise
+#### `CONSTRUCT`: extended description answer
 
-* Go to http://dbpedia.org/sparql
-* Write a `CONSTRUCT` query that returns a description of http://dbpedia.org/resource/Oslo
-* Use `lang()` to `FILTER` only the property values that are URIs, plain literals, or literals in English.
-* Use `langMatches(lang(?o), "EN")` to match on any variant of English.  
+@@@ sparql
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+CONSTRUCT 
+{
+    &lt;http://nasa.dataincubator.org/spacecraft/1957-001B&gt; ?pl ?l ; 
+     ?p ?o .
+    ?o a ?type ; 
+       rdfs:label ?label .
+}
+WHERE
+{ 
+    &lt;http://nasa.dataincubator.org/spacecraft/1957-001B&gt; 
+                ?pl ?l ; 
+                ?p ?o .
+    OPTIONAL { ?o a ?type . }
+    OPTIONAL { ?o foaf:name ?label . }
+    OPTIONAL { ?o rdfs:label ?label . }
+}
+@@@
 
- 
 !SLIDE
 ##`CONSTRUCT`ing new Triples
 
@@ -788,6 +840,17 @@ WHERE
 }
 
 @@@
+
+
+
+!SLIDE
+### `CONSTRUCT`  `FILTER`: Exercise
+
+* Go to http://dbpedia.org/sparql
+* Write a `CONSTRUCT` query that returns a description of http://dbpedia.org/resource/Oslo
+* Use `lang()` to `FILTER` only the property values that are URIs, plain literals, or literals in English.
+* Use `langMatches(lang(?o), "EN")` to match on any variant of English.  
+
 
 !SLIDE
 ## `CONSTRUCT`: Uses
@@ -846,6 +909,10 @@ The way to deal with the 'gotchas' is:
 * `FILTER` - processor has to evaluate values
 * `OPTIONAL` - an OPTIONAL pattern doesn't make the query any more specific
 
+
+!SLIDE
+# Performance
+
 ## Tips for Optimising queries
 
 * Be specific (use URIs and Literals instead of variables where you can)
@@ -856,13 +923,13 @@ The way to deal with the 'gotchas' is:
 
 
 !SLIDE
-## Syntactic Sugar and other Weirdness: 
+## Syntactic Sugar, Obscurities and other Weirdness: 
 
 * `WHERE` isn't required (except with `CONSTRUCT`)
 * `SELECT *` returns a table with columns for each variable used (`DESCRIBE *` also works)
-* **bnodes** are treated as unnamed variables: ` [] a foaf:Person` is the same as `?s a foaf:Person`.
 * Variables can be notated as `$foo` as well as `?foo`
-
+* **bnodes** are treated as unnamed variables: ` [] a foaf:Person` is the same as `?s a foaf:Person`.
+* A *bnode* in a `CONSTRUCT` clause will generate a new *bnode* for every *solution* to the `WHERE` pattern
 
 
 !SLIDE
@@ -1017,9 +1084,20 @@ FILTER(regex(str(?p), str(space:)))
 
 1. Get a unique list of values for the `space:country` of LaunchSites
 2. Pick one, and find a URI for it (try http://sindice.com)
-3. Write a CONSTRUCT query that will create a triple like : `?launchsite dct:isPartOf <countryUri> .` for every occurrence of `?launchsite space:country "country name" .` 
+3. Write a `CONSTRUCT` query that will create a triple like : `?launchsite dct:isPartOf <countryUri> .` for every occurrence of `?launchsite space:country "country name" .` 
 
 You could then load these triples back into your store.
+
+!SLIDE
+# SPARQL for inferencing: Exercise
+
+* `owl:sameAs` means that if `<x>  owl:sameAs <y>`, all the properties of `<y>` also belong to `<x>`
+* Find the URI of something in the [training-exercises store](http://api.talis.com/stores/training-exercises/services/sparql) with an `owl:sameAs` property.
+* Import RDF describing the URI that your `owl:sameAs` points to using [training exercises importer](http://myadmin.kwijibo.talis.com/training-exercises/Importer) 
+* Write a `CONSTRUCT` query that:
+  * Returns a simple description of your URI. ie: `<x> ?p ?o `
+  * Takes all the properties of `<y>` and add them to the description of `<x>`
+
 
 !SLIDE
 
@@ -1029,6 +1107,11 @@ You could then load these triples back into your store.
 * http://sparql.org/
 * The current spec http://www.w3.org/TR/rdf-sparql-query/
 * The 1.1 Spec http://www.w3.org/TR/sparql11-query/
+
+## Tools
+
+* [sparql-query UNIX command line tool](https://github.com/tialaramex/sparql-query)
+* [SNORQL - AJAX front end for SPARQL endpoints](https://github.com/kurtjx/SNORQL)
 
 !SLIDE
 
