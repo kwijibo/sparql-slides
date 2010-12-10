@@ -8,7 +8,7 @@
 !SLIDE
 #Useful Materials
 
-* These slides: http://kwijibo.talis.com/training/SPARQL :  [source on github](https://github.com/kwijibo/sparql-slides)
+* These slides: http://bit.ly/sparql-slides :  [source on github](https://github.com/kwijibo/sparql-slides)
 * [NASA data endpoint](http://api.talis.com/stores/space/services/sparql)
 * [NASA data endpoint that returns HTML](http://myadmin.kwijibo.talis.com/space/services/sparql)
 * [training-exercises endpoint](http://myadmin.kwijibo.talis.com/training-exercises/services/sparql)
@@ -437,17 +437,17 @@ PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
 PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
 SELECT DISTINCT ?spacecraftName ?launchdate ?launchsiteName 
 WHERE {
-  ?spacecraft 
+  ?spacecraft                        #spacecraft
       a space:Spacecraft ;
       foaf:name ?spacecraftName ;
       space:discipline ?discipline .       
-  ?launch 
-      a space:Launch ;
+  ?launch a space:Launch ;           #launch
       space:spacecraft ?spacecraft ;
       space:launched ?launchdate ;
       space:launchsite ?launchsite .
-  ?launchsite
-      rdfs:label ?launchsiteName .
+  ?launchsite                         #launchsite
+      rdfs:label ?launchsiteName ;
+      space:country "Japan" .
 }
 ORDER BY ?launchsiteName
 LIMIT 10
@@ -682,7 +682,7 @@ WHERE
 ##`FILTER` exercise:
 
 Find URIs that are linked to, but not described.
-* What is a pattern for  `?o` where  `?o` is linked to by something?
+* What is a pattern for  `?o` where  `?o` is linked to by something? (ie, being the *object* of a triple)
 * How do you test that `?o` is a URI, rather than a Literal or Blank Node?
 * What is a pattern for `?o` having a description? (ie, being the *subject* of triples)?
 * How do you exclude that pattern?
@@ -871,7 +871,7 @@ You don't need to take any values from the `WHERE` clause.
 PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
 CONSTRUCT
 {
-    <http://example.com/Buzz_Aldrin> a foaf:Person ;
+    &lt;http://example.com/Buzz_Aldrin&gt; a foaf:Person ;
         foaf:name "Buzz Aldrin" .
         
 } WHERE {}
@@ -1060,6 +1060,8 @@ ORDER BY DESC(?noOfMissions)
 !SLIDE
 # SPARQL for Analysing your Dataset: Exercise
 
+Use the  [training-exercises endpoint](http://myadmin.kwijibo.talis.com/training-exercises/services/sparql)
+
 1. Write a query that returns the number of triples in the dataset
 2. Write a query that returns the number of `rdf:type` triples
 3. Get a unique list of properties used in the dataset
@@ -1086,7 +1088,7 @@ ASK WHERE
 ## SPARQL testing your data: exercise
 
 * Go to [training-exercises SPARQL endpoint](http://myadmin.kwijibo.talis.com/training-exercises/services/sparql)
-* Write an `ASK` query that find if any values of `rdf:type` are literals
+* Write an `ASK` query that find if any values of `foaf:depiction` are literals
 * Write an `ASK` query that finds if any predicates use **http://xmlns.com/foaf/spec/** instead of **http://xmlns.com/foaf/0.1/**.
 * Write an `ASK` query that checks if any literals with an xsd:date are not in the correct format for that datatype.
 

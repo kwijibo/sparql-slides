@@ -4784,7 +4784,7 @@ jQuery.extend( jQuery.easing,
           <div class="">
             <div id="slide-1" class="content">
               <h1>Useful Materials</h1><ul>
-<li>These slides: http://kwijibo.talis.com/training/SPARQL :  <a href="https://github.com/kwijibo/sparql-slides">source on github</a>
+<li>These slides: http://bit.ly/sparql-slides :  <a href="https://github.com/kwijibo/sparql-slides">source on github</a>
 </li>
 <li><a href="http://api.talis.com/stores/space/services/sparql">NASA data endpoint</a></li>
 <li><a href="http://myadmin.kwijibo.talis.com/space/services/sparql">NASA data endpoint that returns HTML</a></li>
@@ -5188,17 +5188,17 @@ WHERE {
 <span class="k">PREFIX </span><span class="nv">foaf:</span><span class="nn"> &lt;http://xmlns.com/foaf/0.1/&gt;</span>
 <span class="k">SELECT DISTINCT </span><span class="nv">?spacecraftName ?launchdate ?launchsiteName </span>
 <span class="k">WHERE</span>{<span class="nv"></span>
-<span class="nv">  ?spacecraft</span><span class="o"> </span>
+<span class="nv">  ?spacecraft</span><span class="c">                        #spacecraft</span><span class="o"></span>
 <span class="o">      a </span><span class="na">space:Spacecraft </span>;
       <span class="o">foaf:name </span><span class="nv">?spacecraftName </span>;
       <span class="o">space:discipline </span><span class="nv">?discipline </span>.
-  <span class="nv">?launch</span><span class="o"> </span>
-<span class="o">      a </span><span class="na">space:Launch </span>;
-      <span class="o">space:spacecraft </span><span class="nv">?spacecraft </span>;
+  <span class="nv">?launch</span><span class="o"> a </span><span class="na">space:Launch </span>;           <span class="c">#launch</span><span class="o"></span>
+<span class="o">      space:spacecraft </span><span class="nv">?spacecraft </span>;
       <span class="o">space:launched </span><span class="nv">?launchdate </span>;
       <span class="o">space:launchsite </span><span class="nv">?launchsite </span>.
-  <span class="nv">?launchsite</span><span class="o"></span>
-<span class="o">      rdfs:label </span><span class="nv">?launchsiteName </span>.
+  <span class="nv">?launchsite</span><span class="c">                         #launchsite</span><span class="o"></span>
+<span class="o">      rdfs:label </span><span class="nv">?launchsiteName </span>;
+      <span class="o">space:country </span><span class="s">"Japan" </span>.
 }
 <span class="err">ORDER BY ?launchsiteName</span>
 <span class="k">LIMIT</span><span class="s"> 10</span>
@@ -5430,7 +5430,7 @@ WHERE {
             <div id="slide-52" class="content">
               <h2>
 <code>FILTER</code> exercise:</h2><p>Find URIs that are linked to, but not described.</p><ul>
-<li>What is a pattern for  <code>?o</code> where  <code>?o</code> is linked to by something?</li>
+<li>What is a pattern for  <code>?o</code> where  <code>?o</code> is linked to by something? (ie, being the <em>object</em> of a triple)</li>
 <li>How do you test that <code>?o</code> is a URI, rather than a Literal or Blank Node?</li>
 <li>What is a pattern for <code>?o</code> having a description? (ie, being the <em>subject</em> of triples)?</li>
 <li>How do you exclude that pattern?</li>
@@ -5612,11 +5612,11 @@ WHERE {
             <div id="slide-65" class="content">
               <h3>
 <code>CONSTRUCT</code>: Obscure advanced trick</h3><p>You don't need to take any values from the <code>WHERE</code> clause.</p><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">foaf:</span><span class="nn"> &lt;http://xmlns.com/foaf/0.1/&gt;</span>
-<span class="err">CONSTRUCT</span>{
-<span class="err">    http://example.com/Buzz_Aldrin a foaf:Person ;</span>
-<span class="err">        foaf:name "Buzz Aldrin" .</span>
+<span class="err">CONSTRUCT</span>{<span class="nc"></span>
+<span class="nc">    &lt;http://example.com/Buzz_Aldrin&gt;</span><span class="o"> a </span><span class="na">foaf:Person </span>;
+        <span class="o">foaf:name </span><span class="s">"Buzz Aldrin" </span>.
 
-<span class="err">} </span><span class="k">WHERE</span>{}
+}<span class="err"> </span><span class="k">WHERE</span>{}
 </pre></div>
             </div>
           </div>
@@ -5832,7 +5832,7 @@ WHERE {
         
           <div class="">
             <div id="slide-80" class="content">
-              <h1>SPARQL for Analysing your Dataset: Exercise</h1><ol>
+              <h1>SPARQL for Analysing your Dataset: Exercise</h1><p>Use the  <a href="http://myadmin.kwijibo.talis.com/training-exercises/services/sparql">training-exercises endpoint</a></p><ol>
 <li>Write a query that returns the number of triples in the dataset</li>
 <li>Write a query that returns the number of <code>rdf:type</code> triples</li>
 <li>Get a unique list of properties used in the dataset</li>
@@ -5857,7 +5857,7 @@ WHERE {
               <h2>SPARQL testing your data: exercise</h2><ul>
 <li>Go to <a href="http://myadmin.kwijibo.talis.com/training-exercises/services/sparql">training-exercises SPARQL endpoint</a>
 </li>
-<li>Write an <code>ASK</code> query that find if any values of <code>rdf:type</code> are literals</li>
+<li>Write an <code>ASK</code> query that find if any values of <code>foaf:depiction</code> are literals</li>
 <li>Write an <code>ASK</code> query that finds if any predicates use <strong>http://xmlns.com/foaf/spec/</strong> instead of <strong>http://xmlns.com/foaf/0.1/</strong>.</li>
 <li>Write an <code>ASK</code> query that checks if any literals with an xsd:date are not in the correct format for that datatype.</li>
 </ul>
