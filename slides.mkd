@@ -800,26 +800,29 @@ WHERE
 * The `rdf:type` and `rdfs:label` of every thing that links to **Sputnik 1**.
 
 !SLIDE
-#### `CONSTRUCT`: extended description answer
+### `CONSTRUCT`: extended description answer
 
 @@@ sparql
-PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
-PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
-CONSTRUCT 
-{
-    &lt;http://nasa.dataincubator.org/spacecraft/1957-001B&gt; ?pl ?l ; 
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+CONSTRUCT{
+    <http://nasa.dataincubator.org/spacecraft/1957-001B> ?pl ?l ; 
      ?p ?o .
-    ?o a ?type ; 
-       rdfs:label ?label .
+    ?o a ?type ;  rdfs:label ?label .
+  ?s ?rel  <http://nasa.dataincubator.org/spacecraft/1957-001B> ;
+      a ?rtype ; rdfs:label ?rlabel .
 }
-WHERE
-{ 
-    &lt;http://nasa.dataincubator.org/spacecraft/1957-001B&gt; 
-                ?pl ?l ; 
-                ?p ?o .
+WHERE{ 
+    <http://nasa.dataincubator.org/spacecraft/1957-001B> 
+        ?pl ?l ; ?p ?o .
     OPTIONAL { ?o a ?type . }
-    OPTIONAL { ?o foaf:name ?label . }
-    OPTIONAL { ?o rdfs:label ?label . }
+    OPTIONAL{ ?o foaf:name ?label . }
+    OPTIONAL{ ?o rdfs:label ?label . }
+    OPTIONAL {
+      ?s ?rel <http://nasa.dataincubator.org/spacecraft/1957-001B> .
+      OPTIONAL{ ?s a ?rtype . }
+      OPTIONAL { ?s rdfs:label ?rlabel . }
+    }
 }
 @@@
 
@@ -979,10 +982,10 @@ WHERE {
 !SLIDE
 #Common Problems
 
-* Typos wrong case for property or class name: `foaf:basedNear` instead of `foaf:based_near`
-* wrong prefix URI missing # or / or the URI for the web page of the spec, not the namespace (eg: http://xmlns.com/foaf/spec/ instead of http://xmlns.com/foaf/0.1/)
+* Typos: wrong case for property or class name: `foaf:basedNear` instead of `foaf:based_near`
+* Wrong prefix URI missing # or / or the URI for the web page of the spec, not the namespace (eg: **http://xmlns.com/foaf/spec/** instead of **http://xmlns.com/foaf/0.1/**)
 * Missing OPTIONAL - you won't even notice you're missing results...
-* Comparing Literals Literals are compared on all of value, type and language: `"foo"` in the query will not match `"foo"@en`  in the triple store.
+* Comparing Literals. Literals are compared on all of value, type and language: `"foo"` in the query will not match `"foo"@en`  in the triple store.
 
 !SLIDE
 # SPARQL 1.1 Aggregates
@@ -1101,6 +1104,8 @@ ASK WHERE
 
 # SPARQL for generating schema
 
+**Endpoint: [http://bit.ly/nasa-sparql](http://bit.ly/nasa-sparql)**
+
 @@@ sparql
 PREFIX void: &lt;http://rdfs.org/ns/void#&gt;
 PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
@@ -1118,8 +1123,9 @@ CONSTRUCT {
  &lt;http://nasa.dataincubator.org/&gt; a void:Dataset ;
   void:exampleResource ?ex .
  ?ex  ?p ?o .
- FILTER(isURI(?o))
-FILTER(regex(str(?p), str(space:)))
+  FILTER(isURI(?o))
+ 
+  FILTER(regex(str(?p), str(space:)))
 }
 @@@
 

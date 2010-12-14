@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Slides</title>
+    <title>A Day of SPARQL: Slides</title>
     <link rel="stylesheet" href="slides.css"/><script type="text/javascript" src="slides.js"></script>
     
     <script type="text/javascript">
@@ -5544,22 +5544,27 @@ WHERE {
         
           <div class="">
             <div id="slide-61" class="content">
-              <h4>
-<code>CONSTRUCT</code>: extended description answer</h4><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">foaf:</span><span class="nn"> &lt;http://xmlns.com/foaf/0.1/&gt;</span>
-<span class="k">PREFIX </span><span class="nv">rdfs:</span><span class="nn"> &lt;http://www.w3.org/2000/01/rdf-schema#&gt;</span>
-<span class="err">CONSTRUCT</span>{<span class="nc"></span>
-<span class="nc">    &lt;http://nasa.dataincubator.org/spacecraft/1957-001B&gt;</span><span class="nv"> ?pl ?l </span>; 
-     <span class="nv">?p ?o </span>.
-    <span class="nv">?o</span><span class="o"> a </span><span class="nv">?type </span>; 
-       <span class="o">rdfs:label </span><span class="nv">?label </span>.
-}
-<span class="k">WHERE</span>{<span class="nc"> </span>
-<span class="nc">    &lt;http://nasa.dataincubator.org/spacecraft/1957-001B&gt;</span><span class="nv"> </span>
-<span class="nv">                ?pl ?l </span>; 
-                <span class="nv">?p ?o </span>.
-    <span class="err">OPTIONAL {</span><span class="nv"> ?o</span><span class="o"> a </span><span class="nv">?type </span>. }
+              <h3>
+<code>CONSTRUCT</code>: extended description answer</h3><div class="highlight sparql code highlight"><pre><span class="err">PREFIX foaf: http://xmlns.com/foaf/0.1/</span>
+<span class="err">PREFIX rdfs: http://www.w3.org/2000/01/rdf-schema</span><span class="c">#</span>
+<span class="err">CONSTRUCT</span>{
+<span class="err">    http://nasa.dataincubator.org/spacecraft/1957-001B ?pl ?l ; </span>
+<span class="err">     ?p ?o .</span>
+<span class="err">    ?o a ?type ;  rdfs:label ?label .</span>
+<span class="err">  ?s ?rel  http://nasa.dataincubator.org/spacecraft/1957-001B ;</span>
+<span class="err">      a ?rtype ; rdfs:label ?rlabel .</span>
+<span class="err">}</span>
+<span class="k">WHERE</span>{<span class="err"> </span>
+<span class="err">    http://nasa.dataincubator.org/spacecraft/1957-001B </span>
+<span class="err">        ?pl ?l ; ?p ?o .</span>
+<span class="err">    OPTIONAL</span>{<span class="nv"> ?o</span><span class="o"> a </span><span class="nv">?type </span>. }
 <span class="err">    OPTIONAL</span>{<span class="nv"> ?o</span><span class="o"> foaf:name </span><span class="nv">?label </span>. }
 <span class="err">    OPTIONAL</span>{<span class="nv"> ?o</span><span class="o"> rdfs:label </span><span class="nv">?label </span>. }
+<span class="err">    OPTIONAL</span>{<span class="nv"></span>
+<span class="nv">      ?s ?rel </span><span class="na">http:</span><span class="err">//</span><span class="na">nasa</span>.<span class="err">dataincubator.org/spacecraft/1957-001B .</span>
+<span class="err">      OPTIONAL</span>{<span class="nv"> ?s</span><span class="o"> a </span><span class="nv">?rtype </span>. }
+<span class="err">      OPTIONAL</span>{<span class="nv"> ?s</span><span class="o"> rdfs:label </span><span class="nv">?rlabel </span>. }
+<span class="err">    }</span>
 <span class="err">}</span>
 </pre></div>
             </div>
@@ -5734,11 +5739,11 @@ WHERE {
           <div class="">
             <div id="slide-74" class="content">
               <h1>Common Problems</h1><ul>
-<li>Typos&#8232;wrong case for property or class name: <code>foaf:basedNear</code> instead of <code>foaf:based_near</code>
+<li>Typos: wrong case for property or class name: <code>foaf:basedNear</code> instead of <code>foaf:based_near</code>
 </li>
-<li>wrong prefix URI&#8232;missing # or / or the URI for the web page of the spec, not the namespace (eg: http://xmlns.com/foaf/spec/ instead of http://xmlns.com/foaf/0.1/)</li>
+<li>Wrong prefix URI&#8232;missing # or / or the URI for the web page of the spec, not the namespace (eg: <strong>http://xmlns.com/foaf/spec/</strong> instead of <strong>http://xmlns.com/foaf/0.1/</strong>)</li>
 <li>Missing OPTIONAL -&#8232;you won't even notice you're missing results...</li>
-<li>Comparing Literals&#8232;Literals are compared on all of value, type and language: <code>"foo"</code> in the query will not match <code>"foo"@en</code>  in the triple store.</li>
+<li>Comparing Literals. Literals are compared on all of value, type and language: <code>"foo"</code> in the query will not match <code>"foo"@en</code>  in the triple store.</li>
 </ul>
             </div>
           </div>
@@ -5867,7 +5872,7 @@ WHERE {
           <div class=" 
 ">
             <div id="slide-83" class="content">
-              <h1>SPARQL for generating schema</h1><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">void:</span><span class="nn"> &lt;http://rdfs.org/ns/void#&gt;</span>
+              <h1>SPARQL for generating schema</h1><p><strong>Endpoint: <a href="http://bit.ly/nasa-sparql">http://bit.ly/nasa-sparql</a></strong></p><div class="highlight sparql code highlight"><pre><span class="k">PREFIX </span><span class="nv">void:</span><span class="nn"> &lt;http://rdfs.org/ns/void#&gt;</span>
 <span class="k">PREFIX </span><span class="nv">rdf:</span><span class="nn"> &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;</span>
 <span class="k">PREFIX </span><span class="nv">rdfs:</span><span class="nn"> &lt;http://www.w3.org/2000/01/rdf-schema#&gt;</span>
 <span class="k">PREFIX </span><span class="nv">owl:</span><span class="nn"> &lt;http://www.w3.org/2002/07/owl#&gt;</span>
@@ -5883,7 +5888,7 @@ WHERE {
 <span class="nc"> &lt;http://nasa.dataincubator.org/&gt;</span><span class="o"> a </span><span class="na">void:Dataset </span>;
   <span class="o">void:exampleResource </span><span class="nv">?ex </span>.
  <span class="nv">?ex  ?p ?o </span>.
- <span class="k">FILTER</span>(<span class="na">isURI</span>(<span class="nv">?o</span>))<span class="k">FILTER</span>(<span class="na">regex</span>(<span class="na">str</span>(<span class="nv">?p</span>)<span class="err">,</span><span class="na"> str</span>(<span class="na">space:</span>)))
+  <span class="k">FILTER</span>(<span class="na">isURI</span>(<span class="nv">?o</span>))<span class="k">FILTER</span>(<span class="na">regex</span>(<span class="na">str</span>(<span class="nv">?p</span>)<span class="err">,</span><span class="na"> str</span>(<span class="na">space:</span>)))
 }
 </pre></div>
             </div>
@@ -5949,7 +5954,7 @@ WHERE {
         
           <div class="">
             <div id="slide-88" class="content">
-              <h1>Thanks</h1><p><a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons Licence" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png"></a><br><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">A Day of SPARQL</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://keithalexander.co.uk/" property="cc:attributionName" rel="cc:attributionURL">Keith Alexander</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.<br>Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="http://kwijibo.talis.com/training/SPARQL" rel="dct:source">http://kwijibo.talis.com/training/SPARQL</a>.</p>
+              <h1>Thanks</h1><p><a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons Licence" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png"></a><br><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">A Day of SPARQL</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://keithalexander.co.uk/" property="cc:attributionName" rel="cc:attributionURL">Keith Alexander</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.<br>Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="http://kwijibo.talis.com/training/SPARQL" rel="dct:source">http://kwijibo.talis.com/training/SPARQL</a>.</p><p>These slides are based on the  <a href="http://api.talis.com/stores/training/items/2.5_sparql.pdf">SPARQL slides and exercises</a> from the <a href="http://bit.ly/space-exercises">Talis Two Day Intro to the Web of Data training course</a></p>
             </div>
           </div>
         
