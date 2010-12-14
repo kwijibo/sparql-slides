@@ -70,7 +70,7 @@ OFFSET 0
 !SLIDE
 #Architecture
 
-![data <= triplestore <= SPARQL Processor <= SPARQL endpoint <= applications/clients ](img/sparql-arch.png)
+![data <= triplestore <= SPARQL Processor <= SPARQL endpoint <= applications and clients ](img/sparql-arch.png)
 
 
 !SLIDE
@@ -126,6 +126,9 @@ WHERE {
          .
 }        
 @@@
+
+!NOTES
+Inside the  curly brackets,  write turtle, and the endpoint will tell you if that data exists in the store. It doesn't matter what order you write the triples in, because order is not significant in RDF formats.
 
 !SLIDE
 
