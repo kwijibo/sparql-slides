@@ -806,20 +806,20 @@ WHERE
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 CONSTRUCT{
-    <http://nasa.dataincubator.org/spacecraft/1957-001B> ?pl ?l ; 
+    &lt;http://nasa.dataincubator.org/spacecraft/1957-001B&gt; ?pl ?l ; 
      ?p ?o .
     ?o a ?type ;  rdfs:label ?label .
-  ?s ?rel  <http://nasa.dataincubator.org/spacecraft/1957-001B> ;
+  ?s ?rel  &lt;http://nasa.dataincubator.org/spacecraft/1957-001B&gt; ;
       a ?rtype ; rdfs:label ?rlabel .
 }
 WHERE{ 
-    <http://nasa.dataincubator.org/spacecraft/1957-001B> 
+    &lt;http://nasa.dataincubator.org/spacecraft/1957-001B&gt; 
         ?pl ?l ; ?p ?o .
     OPTIONAL { ?o a ?type . }
     OPTIONAL{ ?o foaf:name ?label . }
     OPTIONAL{ ?o rdfs:label ?label . }
     OPTIONAL {
-      ?s ?rel <http://nasa.dataincubator.org/spacecraft/1957-001B> .
+      ?s ?rel &lt;http://nasa.dataincubator.org/spacecraft/1957-001B&gt; .
       OPTIONAL{ ?s a ?rtype . }
       OPTIONAL { ?s rdfs:label ?rlabel . }
     }

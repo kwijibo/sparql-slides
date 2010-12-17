@@ -5547,22 +5547,22 @@ WHERE {
               <h3>
 <code>CONSTRUCT</code>: extended description answer</h3><div class="highlight sparql code highlight"><pre><span class="err">PREFIX foaf: http://xmlns.com/foaf/0.1/</span>
 <span class="err">PREFIX rdfs: http://www.w3.org/2000/01/rdf-schema</span><span class="c">#</span>
-<span class="err">CONSTRUCT</span>{
-<span class="err">    http://nasa.dataincubator.org/spacecraft/1957-001B ?pl ?l ; </span>
-<span class="err">     ?p ?o .</span>
-<span class="err">    ?o a ?type ;  rdfs:label ?label .</span>
-<span class="err">  ?s ?rel  http://nasa.dataincubator.org/spacecraft/1957-001B ;</span>
-<span class="err">      a ?rtype ; rdfs:label ?rlabel .</span>
-<span class="err">}</span>
-<span class="k">WHERE</span>{<span class="err"> </span>
-<span class="err">    http://nasa.dataincubator.org/spacecraft/1957-001B </span>
-<span class="err">        ?pl ?l ; ?p ?o .</span>
-<span class="err">    OPTIONAL</span>{<span class="nv"> ?o</span><span class="o"> a </span><span class="nv">?type </span>. }
+<span class="err">CONSTRUCT</span>{<span class="nc"></span>
+<span class="nc">    &lt;http://nasa.dataincubator.org/spacecraft/1957-001B&gt;</span><span class="nv"> ?pl ?l </span>; 
+     <span class="nv">?p ?o </span>.
+    <span class="nv">?o</span><span class="o"> a </span><span class="nv">?type </span>;  <span class="o">rdfs:label </span><span class="nv">?label </span>.
+  <span class="nv">?s ?rel  </span><span class="na">&lt;http://nasa.dataincubator.org/spacecraft/1957-001B&gt;</span> ;
+      <span class="o">a </span><span class="nv">?rtype </span>; <span class="o">rdfs:label </span><span class="nv">?rlabel </span>.
+}
+<span class="k">WHERE</span>{<span class="nc"> </span>
+<span class="nc">    &lt;http://nasa.dataincubator.org/spacecraft/1957-001B&gt;</span><span class="nv"> </span>
+<span class="nv">        ?pl ?l </span>; <span class="nv">?p ?o </span>.
+    <span class="err">OPTIONAL {</span><span class="nv"> ?o</span><span class="o"> a </span><span class="nv">?type </span>. }
 <span class="err">    OPTIONAL</span>{<span class="nv"> ?o</span><span class="o"> foaf:name </span><span class="nv">?label </span>. }
 <span class="err">    OPTIONAL</span>{<span class="nv"> ?o</span><span class="o"> rdfs:label </span><span class="nv">?label </span>. }
 <span class="err">    OPTIONAL</span>{<span class="nv"></span>
-<span class="nv">      ?s ?rel </span><span class="na">http:</span><span class="err">//</span><span class="na">nasa</span>.<span class="err">dataincubator.org/spacecraft/1957-001B .</span>
-<span class="err">      OPTIONAL</span>{<span class="nv"> ?s</span><span class="o"> a </span><span class="nv">?rtype </span>. }
+<span class="nv">      ?s ?rel </span><span class="na">&lt;http://nasa.dataincubator.org/spacecraft/1957-001B&gt;</span><span class="err"> </span>.
+      <span class="err">OPTIONAL{</span><span class="nv"> ?s</span><span class="o"> a </span><span class="nv">?rtype </span>. }
 <span class="err">      OPTIONAL</span>{<span class="nv"> ?s</span><span class="o"> rdfs:label </span><span class="nv">?rlabel </span>. }
 <span class="err">    }</span>
 <span class="err">}</span>
