@@ -2,7 +2,9 @@
 <html>
   <head>
     <title>A Day of SPARQL: Slides</title>
-    <link rel="stylesheet" href="slides.css"/><script type="text/javascript" src="slides.js"></script>
+    <link rel="stylesheet" href="slides.css"/>
+    <link rel="stylesheet" href="stylesheets/print.css" type="text/css" media="print" charset="utf-8">
+    <script type="text/javascript" src="slides.js"></script>
     
     <script type="text/javascript">
       /*!
@@ -4677,6 +4679,15 @@ jQuery.extend( jQuery.easing,
     formatGist();
   }
 
+  var updatePresenterWindow = function() {
+  	var presenterWindow = window.open(null);
+  	var nextIndex = getIndex()+1;
+	var slideHTML = $("div#slide-"+nextIndex).html();
+	console.log(slideHTML);
+	//presenterWindow.document.body.innerHTML = slideHtml;
+
+  };
+
   var move = function(event) {
     var DIRECTIONS = {
       37: -1,     // ARROW LEFT
@@ -4705,7 +4716,7 @@ jQuery.extend( jQuery.easing,
       }
     }
   }
-
+  updatePresenterWindow();
   if ('ontouchstart' in document) {
     var touchEnd   = null;
     var touchStart = null;

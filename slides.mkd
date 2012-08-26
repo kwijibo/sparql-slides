@@ -1,19 +1,16 @@
 !SLIDE
 
-#A Day of SPARQL 
+#Learning SPARQL
 
 ##  Keith Alexander
-### keith.alexander@talis.com
+### keithalexander@keithalexander.co.uk
 
 !SLIDE
 #Useful Materials
 
 * These slides: http://bit.ly/sparql-slides :  [source on github](https://github.com/kwijibo/sparql-slides)
-* [NASA data endpoint](http://api.talis.com/stores/space/services/sparql)
-* [NASA data endpoint that returns HTML](http://myadmin.kwijibo.talis.com/space/services/sparql)
-* [training-exercises endpoint](http://myadmin.kwijibo.talis.com/training-exercises/services/sparql)
+* [NASA data endpoint](http://dydra.com/keithalexander/nasa/sparql)
 * [prefix.cc](http://prefix.cc)
-* [bookmarklet for adding missing prefixes to query](http://kwijibo.talis.com/bookmarklets.html#addPrefix2Sparql)
 
 !SLIDE
 
@@ -77,7 +74,7 @@ OFFSET 0
 #Endpoint
 
 ## A SPARQL Endpoint for NASA data
-<form method="POST" action="http://api.talis.com/stores/space/services/sparql">
+<form method="POST" action="http://dydra.com/keithalexander/nasa/sparql">
     <textarea rows="10" cols="40" name="query">
 PREFIX space: &lt;http://purl.org/net/schemas/space/&gt; 
 SELECT ?craft 
@@ -208,7 +205,7 @@ WHERE {
 
 
 
-[http://bit.ly/nasa-sparql](http://api.talis.com/stores/space/services/sparql)
+[http://bit.ly/nasa-sparql](http://dydra.com/keithalexander/nasa/sparql)
 
 
   
@@ -783,7 +780,7 @@ WHERE
 !SLIDE
 ### `CONSTRUCT`: Exercise
 
-* Use the [NASA endpoint](http://api.talis.com/stores/space/services/sparql)
+* Use the [NASA endpoint](http://dydra.com/keithalexander/nasa/sparql)
 * Write a `CONSTRUCT` that returns the `foaf:name`, `rdf:type`, and `foaf:depiction` of any `space:Spacecraft` 
 * Restrict the query to only `space:Spacecraft` with "Apollo" in their name.
 * Make the `foaf:depiction` optional.
